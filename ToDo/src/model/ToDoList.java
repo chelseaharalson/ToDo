@@ -1,8 +1,14 @@
 package model;
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.Date;
+import java.util.Locale;
 import java.util.ArrayList;
+import java.util.Calendar;
+
 import com.google.gson.Gson;
 
 /**
@@ -17,12 +23,11 @@ public class ToDoList {
         toDoList = new ArrayList<ToDo>();
         taskCount = 0;
         
-        Date d = new Date();
-        addTask("This is my first task", "Details!!!!!!", d, d);
-        addTask("This is my second task", "Details2!!!!!!", d, d);
+        addTask("This is my first task", "Details!!!!!!", "5/22/2017", "2:22pm");
+        addTask("This is my second task", "Details2!!!!!!", "5/22/2017", "2:22pm");
     }
     
-    public void addTask(String pTaskDescr, String pDetail, Date pDueDate, Date pTimeDue) {
+    public void addTask(String pTaskDescr, String pDetail, String pDueDate, String pTimeDue) {
         Integer pTaskID = taskCount;
         taskCount++;        // Increment taskID so each new task has a unique ID
         toDoList.add(new ToDo(pTaskID, pTaskDescr, pDetail, pDueDate, pTimeDue));
@@ -37,7 +42,7 @@ public class ToDoList {
         }
     }
     
-    public void editTask(Integer pTaskID, String pTaskDescr, String pDetail, Date pDueDate, Date pTimeDue) {
+    public void editTask(Integer pTaskID, String pTaskDescr, String pDetail, String pDueDate, String pTimeDue) {
         for (int i = 0; i < toDoList.size(); i++) {
             if (toDoList.get(i).taskID == pTaskID) {
                 toDoList.get(i).taskDescr = pTaskDescr;

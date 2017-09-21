@@ -41,8 +41,11 @@
                 "bPaginate": false,
                 "bSort": false,
                 "columns": [
+                	   {
+                 	 "data": null,
+                      defaultContent: ''
+                    },
                     { "data": "taskDescr" },
-                    { "data": "detail" },
                     { "data": "dueDate" },
                     { "data": "timeDue" },
                     {
@@ -67,12 +70,11 @@
                     targets:   0
                 } ],
                 select: {
-                    'style': 'multi',
+                    style:    'multi',
                     selector: 'td:first-child'
                 },
                 order: [[ 1, 'asc' ]]
                 } );
-
         } );
 
         </script>
