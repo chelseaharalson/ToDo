@@ -25,6 +25,7 @@
         $(document).ready(function() {
             ncTable = $("#notCompletedList").DataTable( {
                 "ajax": "displayData",
+                "rowId": "id",
                 "bFilter": false,
                 "bInfo": false,
                 "bLengthChange": false,
@@ -46,7 +47,7 @@
                     {
                        "data": null,
                         className: "center",
-                        defaultContent: '<a href="#openEdit"><img src="images/edit.png"></a>'
+                        defaultContent: '<a href="#openEdit" onclick="editTask(this)"><img src="images/edit.png"></a>'
                     },
                     {
                        "data": null,
@@ -54,7 +55,12 @@
                         defaultContent: '<a href="#openDetails"><img src="images/details.png"></a>'
                     }
                 ],
-                columnDefs: [ {
+                columnDefs: [ 
+                	{
+                		"bVisible": false,
+                		targets: "id"
+                	},
+                	{
                     orderable: false,
                     className: 'select-checkbox',
                     targets:   0
@@ -94,7 +100,6 @@
                     },
                     dataType: 'text',
                     success: function(data) {
-                  	    //$("#openNewTaskForm").hide();
                   	    console.log(data);
                   	    var jsonObj = JSON.parse(data);
                   	    console.log(jsonObj.validDate);
@@ -115,11 +120,46 @@
 	                  	    	}
 	                  	   ]).draw();
 	                  	   document.getElementById("formAddTask").reset();
+	                  	   //$("#openNewTaskForm").hide();
                   	    }
                 	    }
                 });
         });
         });
+        
+        	function editTask (obj) {
+       		var rowID = $(obj).attr('id');
+	        alert(rowID);
+	    	    var txbAddTaskDes = document.getElementById('txbAddTaskDes');
+	    		var txbAddDetails = document.getElementById('txtAreaAddDetails');
+	    		var txbDueDate = document.getElementById('txbDueDate');
+	    		var ddHoursElement = document.getElementById("addHour");
+	        var ddHoursVal = ddHoursElement.options[ddHoursElement.selectedIndex].value;
+	        var ddMinutesElement = document.getElementById("addMinute");
+	        var ddMinutesVal = ddMinutesElement.options[ddMinutesElement.selectedIndex].value;
+	        var ddAmPmElement = document.getElementById("addAmPm");
+	        var ddAmPmVal = ddAmPmElement.options[ddAmPmElement.selectedIndex].value;
+	        var ncCells = notCompletedList.rows.item(rowID).cells;
+	        txbAddTaskDes.value = ncCells[1].innerHTML.trim();
+	    	 }
+        	
+        	$(function() {
+	        	$('#formDeleteAllTask').on('submit', function(event) {
+	                event.preventDefault();
+	              	  $.ajax({
+	                    url: 'displayData',
+	                    type: 'post',
+	                    method: 'post',
+	                    data: {
+	                    	'type': 'btnDeleteAll'
+	                    },
+	                    dataType: 'text',
+	                    success: function(data) {
+	                    		$('#notCompletedList').DataTable().clear().draw();
+	                	    }
+	                });
+	        });
+        	});
         </script>
         <script type="text/javascript">
 	        $(function(){
@@ -162,7 +202,11 @@
             <tr>
               <td width="40%"><a href="#openNewTaskForm"><button class="btn btn-1 btn-1a icon-newitem"><span>New Item</span></button></a></td>
               <td width="40%"><button class="btn btn-1 btn-1a icon-complete"><span>Complete All</span></button></td>
-              <td width="40%"><button class="btn btn-1 btn-1a icon-remove"><span>Delete All</span></button></td>
+              <td width="40%">
+              	<form method="post" action="DataTableServlet" id="formDeleteAllTask">
+              		<button class="btn btn-1 btn-1a icon-remove" id="btnDeleteAll"><span>Delete All</span></button>
+              	</form>
+              </td>
               <td width="40%"><button class="btn btn-1 btn-1a icon-show"><span>Show All</span></button></td>
             </tr>
         </table>

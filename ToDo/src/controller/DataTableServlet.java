@@ -46,8 +46,8 @@ public class DataTableServlet extends HttpServlet {
 		//doGet(request, response);
 		//System.out.println("Received request");
 		//System.out.println(request.getParameter("type"));
+		PrintWriter out = response.getWriter();
 		if (request.getParameter("type").equals("btnAddTask")) {
-			PrintWriter out = response.getWriter();
 			System.out.println(request.getParameter("txbAddTaskDes"));
 			String taskDesc = request.getParameter("txbAddTaskDes").trim();
 			String details = request.getParameter("txtAreaAddDetails").trim();
@@ -81,8 +81,9 @@ public class DataTableServlet extends HttpServlet {
 			//response.getWriter().write(addTask);
 			//response.sendRedirect("index.jsp");
 		}
-		else if (request.getParameter("action2") != null) {
-		    // Invoke action 2.
+		else if (request.getParameter("type").equals("btnDeleteAll")) {
+		    tdl.deleteAllTasks();
+		    out.println("");
 		}
 		else if (request.getParameter("action3") != null) {
 		    // Invoke action 3.
