@@ -77,6 +77,7 @@ public class ToDoList {
         }
     }
     
+    // checkoverdue as iterating through list
     public void showAll() {
         // Return todo list as json
     }
@@ -84,6 +85,7 @@ public class ToDoList {
     public String showNotCompleted() {
         ArrayList<ToDo> notCompletedList = new ArrayList<ToDo>();
         for (int i = 0; i < toDoList.size(); i++) {
+        		// checkoverdue
             if (toDoList.get(i).isComplete == false) {
                 notCompletedList.add(toDoList.get(i));
             }

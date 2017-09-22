@@ -37,13 +37,14 @@ public class DataTableServlet extends HttpServlet {
 		response.setContentType("text/plain");
         String strTdl = tdl.showNotCompleted();
         response.getWriter().print(strTdl);
+        System.out.println("In doGet");
 	}
 
 	/**
 	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		doGet(request, response);
+		//doGet(request, response);
 		System.out.println("Received request");
 		System.out.println(request.getParameter("type"));
 		if (request.getParameter("type").equals("btnAddTask")) {

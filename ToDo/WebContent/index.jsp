@@ -14,15 +14,16 @@
         <link rel="stylesheet" type="text/css" href="css/select.dataTables.min.css" />
         <link rel="stylesheet" type="text/css" href="css/buttons.css" />
         <link href='http://fonts.googleapis.com/css?family=PT+Sans+Narrow' rel='stylesheet' type='text/css' />
-	<link href='http://fonts.googleapis.com/css?family=Oswald' rel='stylesheet' type='text/css' />
+	    <link href='http://fonts.googleapis.com/css?family=Oswald' rel='stylesheet' type='text/css' />
         <script src="scripts/jquery-1.12.4.js" type="text/javascript"></script>
         <script src="scripts/jquery.dataTables.min.js" type="text/javascript"></script>
         <script src="scripts/dataTables.select.min.js" type="text/javascript"></script>
         <link rel="shortcut icon" href="images/icon.ico">
         <script src="scripts/modernizr.custom.js"></script>
         <script type="text/javascript">
+        var ncTable;
         $(document).ready(function() {
-            var ncTable = $("#notCompletedList").DataTable( {
+            ncTable = $("#notCompletedList").DataTable( {
                 "ajax": "displayData",
                 "bFilter": false,
                 "bInfo": false,
@@ -64,9 +65,51 @@
                 },
                 order: [[ 1, 'asc' ]]
                 } );
-        	    
-                ncTable.page( 'next' ).draw( 'page' );
         } );
+        
+        $(function() {
+            $('#formAddTask').on('submit', function(event) {
+                event.preventDefault();
+                var txbAddDes = document.getElementById("txbAddTaskDes").value;
+                var txbAddDet = document.getElementById("txtAreaAddDetails").value;
+                var txbDueD = document.getElementById("txbDueDate").value;
+                var ddHoursElement = document.getElementById("addHour");
+                var ddHoursVal = ddHoursElement.options[ddHoursElement.selectedIndex].value;
+                var ddMinutesElement = document.getElementById("addMinute");
+                var ddMinutesVal = ddMinutesElement.options[ddMinutesElement.selectedIndex].value;
+                var ddAmPmElement = document.getElementById("addAmPm");
+                var ddAmPmVal = ddAmPmElement.options[ddAmPmElement.selectedIndex].value;
+              	  $.ajax({
+                    url: 'displayData',
+                    type: 'post',
+                    method: 'post',
+                    data: { 
+                        'type': 'btnAddTask',
+                        'txbAddTaskDes': txbAddDes,
+                        'txtAreaAddDetails': txbAddDet,
+                        'txbDueDate': txbDueD,
+                        'addHour': ddHoursVal,
+                        'addMinute': ddMinutesVal,
+                        'addAmPm': ddAmPmVal
+                    },
+                    dataType: 'text',
+                    success: function(data) {
+                  	    //$("#openNewTaskForm").hide();
+                  	    console.log(data);
+                  	    var jsonObj = JSON.parse(data);
+                  	  	//$('#ncTable').DataTable().draw();
+                  	  	//console.log(jsonObj.taskDescr);
+                  	    ncTable.rows.add([
+                  	    	{
+                  	    		'taskDescr': jsonObj.taskDescr,
+                  	    		'dueDate': jsonObj.dueDate,
+                  	    		'timeDue': jsonObj.timeDue
+                  	    	}
+                  	   ]).draw();
+                	  }
+                });
+        });
+        });
         </script>
         <script type="text/javascript">
 	        $(function(){
@@ -110,41 +153,6 @@
 	            $('#editMinute').html(selectMin);
 	        });
         </script>
-        <script type="text/javascript">
-              $(function() {
-                  $('#formAddTask').on('submit', function(event) {
-                      event.preventDefault();
-                      var txbAddDes = document.getElementById("txbAddTaskDes").value;
-                      var txbAddDet = document.getElementById("txtAreaAddDetails").value;
-                      var txbDueD = document.getElementById("txbDueDate").value;
-                      var ddHoursElement = document.getElementById("addHour");
-                      var ddHoursVal = ddHoursElement.options[ddHoursElement.selectedIndex].value;
-                      var ddMinutesElement = document.getElementById("addMinute");
-                      var ddMinutesVal = ddMinutesElement.options[ddMinutesElement.selectedIndex].value;
-                      var ddAmPmElement = document.getElementById("addAmPm");
-                      var ddAmPmVal = ddAmPmElement.options[ddAmPmElement.selectedIndex].value;
-                    	  $.ajax({
-                          url: 'displayData',
-                          type: 'post',
-                          data: { 
-                              'type': 'btnAddTask',
-                              'txbAddTaskDes': txbAddDes,
-                              'txtAreaAddDetails': txbAddDet,
-                              'txbDueDate': txbDueD,
-                              'addHour': ddHoursVal,
-                              'addMinute': ddMinutesVal,
-                              'addAmPm': ddAmPmVal
-                          },
-                          dataType: 'text',
-                          success: function(data) {
-                        	    //$("#openNewTaskForm").hide();
-                        	    alert(data);
-                        	  	$('#ncTable').DataTable().draw();
-                      	  }
-                      });
-              });
-              });
-          </script>
         <title>To Do List</title>
     </head>
     <body>
