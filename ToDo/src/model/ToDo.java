@@ -47,7 +47,7 @@ public class ToDo {
       	Date dueDateObj = new SimpleDateFormat("yyyy-mm-dd", Locale.ENGLISH).parse(dueDate);
         LocalDate localDueDate = new java.sql.Date(dueDateObj.getTime()).toLocalDate();
         
-        Date timeDueObj = new SimpleDateFormat("hh:mm", Locale.ENGLISH).parse(timeDue);
+        Date timeDueObj = new SimpleDateFormat("hh:mm a", Locale.ENGLISH).parse(timeDue);
         Instant instant = Instant.ofEpochMilli(timeDueObj.getTime());
         LocalTime localTimeDue = LocalDateTime.ofInstant(instant, ZoneId.systemDefault()).toLocalTime();
         if (currentDate.isAfter(localDueDate) && currentTime.isAfter(localTimeDue)) {

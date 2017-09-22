@@ -20,20 +20,9 @@
         <script src="scripts/dataTables.select.min.js" type="text/javascript"></script>
         <link rel="shortcut icon" href="images/icon.ico">
         <script src="scripts/modernizr.custom.js"></script>
-        <script src="scripts/moment.js"></script>
-        <script src="scripts/combodate.js"></script>
         <script type="text/javascript">
-
         $(document).ready(function() {
-        		/*var json;
-        	
-        	    $.get("displayData",function(responseText){
-        	    		console.log(responseText);
-        	    		json = JSON.parse(responseText);
-        	    		console.log(json);
-        	    });*/
-			var json;
-            $("#notCompletedList").DataTable( {
+            var ncTable = $("#notCompletedList").DataTable( {
                 "ajax": "displayData",
                 "bFilter": false,
                 "bInfo": false,
@@ -75,39 +64,87 @@
                 },
                 order: [[ 1, 'asc' ]]
                 } );
+        	    
+                ncTable.page( 'next' ).draw( 'page' );
         } );
-
         </script>
         <script type="text/javascript">
-            $(function(){
-                $('#time12').combodate();  
-            });
+	        $(function(){
+	            var selectHour = '';
+	            for (i=1;i<=12;i++){
+	              	selectHour += '<option val=' + i + '>' + i + '</option>';
+	            }
+	            $('#addHour').html(selectHour);
+	        });
         </script>
         <script type="text/javascript">
-            $(function(){
-                $('#dueDate').combodate({
-                    minYear: 2017,
-                    maxYear: 2021,
-                    minuteStep: 10,
-                    yearDescending: false
-                });  
-            });
+	        $(function(){
+	            var selectMin = '';
+	            for (i=0;i<=9;i++){
+	              	selectMin += '<option val=' + i + '>' + 0 + i + '</option>';
+	            }
+	            for (i=10;i<=59;i++){
+	             	selectMin += '<option val=' + i + '>' + i + '</option>';
+	            }
+	            $('#addMinute').html(selectMin);
+	        });
         </script>
         <script type="text/javascript">
-            $(function(){
-                $('#timeEdit12').combodate();  
-            });
+	        $(function(){
+	            var selectHour = '';
+	            for (i=1;i<=12;i++){
+	              	selectHour += '<option val=' + i + '>' + i + '</option>';
+	            }
+	            $('#editHour').html(selectHour);
+	        });
         </script>
         <script type="text/javascript">
-            $(function(){
-                $('#dueEditDate').combodate({
-                    minYear: 2017,
-                    maxYear: 2021,
-                    minuteStep: 10,
-                    yearDescending: false
-                });  
-            });
+	        $(function(){
+	            var selectMin = '';
+	            for (i=0;i<=9;i++){
+	              	selectMin += '<option val=' + i + '>' + 0 + i + '</option>';
+	            }
+	            for (i=10;i<=59;i++){
+	             	selectMin += '<option val=' + i + '>' + i + '</option>';
+	            }
+	            $('#editMinute').html(selectMin);
+	        });
         </script>
+        <script type="text/javascript">
+              $(function() {
+                  $('#formAddTask').on('submit', function(event) {
+                      event.preventDefault();
+                      var txbAddDes = document.getElementById("txbAddTaskDes").value;
+                      var txbAddDet = document.getElementById("txtAreaAddDetails").value;
+                      var txbDueD = document.getElementById("txbDueDate").value;
+                      var ddHoursElement = document.getElementById("addHour");
+                      var ddHoursVal = ddHoursElement.options[ddHoursElement.selectedIndex].value;
+                      var ddMinutesElement = document.getElementById("addMinute");
+                      var ddMinutesVal = ddMinutesElement.options[ddMinutesElement.selectedIndex].value;
+                      var ddAmPmElement = document.getElementById("addAmPm");
+                      var ddAmPmVal = ddAmPmElement.options[ddAmPmElement.selectedIndex].value;
+                    	  $.ajax({
+                          url: 'displayData',
+                          type: 'post',
+                          data: { 
+                              'type': 'btnAddTask',
+                              'txbAddTaskDes': txbAddDes,
+                              'txtAreaAddDetails': txbAddDet,
+                              'txbDueDate': txbDueD,
+                              'addHour': ddHoursVal,
+                              'addMinute': ddMinutesVal,
+                              'addAmPm': ddAmPmVal
+                          },
+                          dataType: 'text',
+                          success: function(data) {
+                        	    //$("#openNewTaskForm").hide();
+                        	    alert(data);
+                        	  	$('#ncTable').DataTable().draw();
+                      	  }
+                      });
+              });
+              });
+          </script>
         <title>To Do List</title>
     </head>
     <body>
@@ -151,20 +188,19 @@
 	    <a class="close" href="#">X</a>
 	    <p class="title">Add Task</p>
 	    <div class="content">
-	    <form method="post" action="AddTask" onsubmit="return validateSaveAliasForm()" >
+	    <form method="post" action="DataTableServlet" id="formAddTask" onsubmit="return validateSaveAliasForm()" >
 	    <table width="100%">
                 <tr>
                    <td><h4>Task: </h4></td>
                    <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
                    <td> 
-                       <input value="" type="text" id="txbAddTask" name="txbAddTask" style="width: 400px;" />  
+                       <input value="" type="text" id="txbAddTaskDes" name="txbAddTaskDes" style="width: 400px;" />  
                    </td>
                    <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
                     <td><h4>Due Date: </h4></td>
                     <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
                     <td>
-                        <!-- <input value="" type="text" id="txbDueDate" name="txbDueDate" maxlength="10" style="width: 140px;" placeholder='mm/dd/yyyy' /> -->
-                        <input id="dueDate" value="01-01-2017" data-format="DD-MM-YYYY" data-template="D MMM YYYY">
+                        <input value="" type="text" id="txbDueDate" name="txbDueDate" maxlength="10" style="width: 140px;" placeholder='mm/dd/yyyy' />
                     </td>
                  </tr>
                 <tr>
@@ -174,19 +210,24 @@
                    <td><h4>Details: </h4></td>
                    <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
                    <td> 
-                       <textarea rows='3' data-min-rows='3'></textarea>  
+                       <textarea rows='3' data-min-rows='3' id="txtAreaAddDetails" name="textAreaAddDetails"></textarea>  
                    </td>
                    <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
                     <td><h4>Due Time: </h4></td>
                     <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
                     <td>
                         <!-- <input value="" type="text" id="txbTime" name="txbTime" maxlength="5" style="width: 140px;" placeholder='hh:mm'/> -->
-                        <input type="text" id="time12" data-format="h:mm a" data-template="hh : mm a" name="datetime" value="12:00 am">
+                        <select id='addHour' name='addHour'></select> :
+                        <select id='addMinute' name='addMinute'></select>
+                        <select id='addAmPm' name='addAmPm'>
+                        		<option value='AM' >AM</option>
+  							<option value='PM'>PM</option>
+                        </select>
                     </td>
                  </tr>
             </table>
             <center>
-            	<button type="submit" class="btn btn-1 btn-1a icon-newitem" onclick="" >
+            	<button type="submit" class="btn btn-1 btn-1a icon-newitem" name="btnAddTask" onclick="" >
             		<span>Submit</span>
             	</button>
             </center>
@@ -240,7 +281,7 @@
                     <td><h4>Due Date: </h4></td>
                     <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
                     <td>
-                        <input id="dueEditDate" value="01-01-2017" data-format="DD-MM-YYYY" data-template="D MMM YYYY">
+                        <input value="" type="text" id="txbDueDate" name="txbDueDate" maxlength="10" style="width: 140px;" placeholder='mm/dd/yyyy' />
                     </td>
                  </tr>
                 <tr>
@@ -256,7 +297,12 @@
                     <td><h4>Due Time: </h4></td>
                     <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
                     <td>
-                        <input type="text" id="timeEdit12" data-format="h:mm a" data-template="hh : mm a" name="datetime" value="12:00 am">
+                        <select id="editHour" name="editHour"></select> :
+                        <select id='editMinute' name="editMinute"></select>
+                        <select id='editAmPm' name="editAmPm">
+                        		<option value="AM">AM</option>
+  							<option value="PM">PM</option>
+                        </select>
                     </td>
                  </tr>
             </table>

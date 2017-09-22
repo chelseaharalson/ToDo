@@ -1,6 +1,8 @@
 package controller;
 
 import java.io.IOException;
+import java.io.PrintWriter;
+
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -18,6 +20,7 @@ import model.ToDoList;
 @WebServlet("/DataTableServlet")
 public class DataTableServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
+	private static ToDoList tdl = new ToDoList();
 
     /**
      * Default constructor. 
@@ -32,15 +35,8 @@ public class DataTableServlet extends HttpServlet {
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		//response.setContentType("application/json");
 		response.setContentType("text/plain");
-        
-        ToDoList tdlObj = new ToDoList();
-        String tdl = tdlObj.showNotCompleted();
-
-        //Gson gson = new GsonBuilder().setPrettyPrinting().create();
-        // Convert Java Object to Json
-        //String json = gson.toJson(tdl);
-
-        response.getWriter().print(tdl);
+        String strTdl = tdl.showNotCompleted();
+        response.getWriter().print(strTdl);
 	}
 
 	/**
@@ -48,6 +44,34 @@ public class DataTableServlet extends HttpServlet {
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		doGet(request, response);
+		System.out.println("Received request");
+		System.out.println(request.getParameter("type"));
+		if (request.getParameter("type").equals("btnAddTask")) {
+		//if (request.getParameter("btnAddTask") != null) {
+			System.out.println(request.getParameter("txbAddTaskDes"));
+			String taskDesc = request.getParameter("txbAddTaskDes").trim();
+			String details = request.getParameter("txtAreaAddDetails").trim();
+			String hour = request.getParameter("addHour");
+			String minute = request.getParameter("addMinute");
+			String amPm = request.getParameter("addAmPm");
+			String dueTime = hour + ":" + minute + " " + amPm;
+			String addTask = tdl.addTask(taskDesc, details, "5/22/1992", dueTime);
+			PrintWriter out = response.getWriter();
+			System.out.println(tdl.showNotCompleted());
+			out.println(addTask);
+			//out.println(taskDesc + " " + details + " " + dueTime);
+			//response.getWriter().write(addTask);
+			//response.sendRedirect("index.jsp");
+		}
+		else if (request.getParameter("action2") != null) {
+		    // Invoke action 2.
+		}
+		else if (request.getParameter("action3") != null) {
+		    // Invoke action 3.
+		}
+		else {
+			System.out.println("Confused");
+		}
 	}
 
 }

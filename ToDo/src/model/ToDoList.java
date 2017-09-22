@@ -27,10 +27,13 @@ public class ToDoList {
         addTask("This is my second task", "Details2!!!!!!", "5/22/2017", "2:22pm");
     }
     
-    public void addTask(String pTaskDescr, String pDetail, String pDueDate, String pTimeDue) {
+    public String addTask(String pTaskDescr, String pDetail, String pDueDate, String pTimeDue) {
         Integer pTaskID = taskCount;
         taskCount++;        // Increment taskID so each new task has a unique ID
+        System.out.println("Adding new task: " + pTaskDescr);
         toDoList.add(new ToDo(pTaskID, pTaskDescr, pDetail, pDueDate, pTimeDue));
+        String resultString = toDoObjToAjaxString(toDoList.get(toDoList.size()-1));
+        return resultString;
     }
     
     public void deleteTask(Integer pTaskID) {
@@ -91,20 +94,23 @@ public class ToDoList {
         
         String resultString = "{\"data\":[";
         for (int i = 0; i < notCompletedList.size(); i++) {
-        		resultString += "{\"id\":\"" + notCompletedList.get(i).taskID + "\",\"taskDescr\":\"" + notCompletedList.get(i).taskDescr 
-        				+ "\",\"detail\":\"" + notCompletedList.get(i).detail + "\",\"dueDate\":\"" + notCompletedList.get(i).dueDate 
-        				+ "\",\"timeDue\":\"" + notCompletedList.get(i).timeDue
-        				+ "\",\"isComplete\":\"" + notCompletedList.get(i).isComplete + "\",\"isOverdue\":\"" + notCompletedList.get(i).isOverdue 
-        				+ "\"";
+        		resultString += toDoObjToAjaxString(notCompletedList.get(i));
         		if (i+1 < notCompletedList.size()) {
-        			resultString += "},";
-        		}
-        		else {
-        			resultString += "}";
+        			resultString += ",";
         		}
         }
         resultString += "]}";
         System.out.println(resultString);
         return resultString;
+    }
+    
+    public String toDoObjToAjaxString(ToDo td) {
+	    	String resultString = "";
+    		resultString += "{\"id\":\"" + td.taskID + "\",\"taskDescr\":\"" + td.taskDescr 
+    				+ "\",\"detail\":\"" + td.detail + "\",\"dueDate\":\"" + td.dueDate 
+    				+ "\",\"timeDue\":\"" + td.timeDue
+    				+ "\",\"isComplete\":\"" + td.isComplete + "\",\"isOverdue\":\"" + td.isOverdue 
+    				+ "\"}";
+	     return resultString;
     }
 }
