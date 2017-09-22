@@ -23,8 +23,8 @@ public class ToDoList {
         toDoList = new ArrayList<ToDo>();
         taskCount = 0;
         
-        addTask("This is my first task", "Details!!!!!!", "5/22/2017", "2:22pm");
-        addTask("This is my second task", "Details2!!!!!!", "5/22/2017", "2:22pm");
+        addTask("This is my first task", "Details!!!!!!", "05/22/2017", "2:22pm");
+        addTask("This is my second task", "Details2!!!!!!", "05/22/2017", "2:22pm");
     }
     
     public String addTask(String pTaskDescr, String pDetail, String pDueDate, String pTimeDue) {
@@ -114,5 +114,23 @@ public class ToDoList {
     				+ "\",\"isComplete\":\"" + td.isComplete + "\",\"isOverdue\":\"" + td.isOverdue 
     				+ "\"}";
 	     return resultString;
+    }
+    
+    public boolean isValidDate(String input) {
+        SimpleDateFormat sdf = new SimpleDateFormat("MM/dd/yyyy");
+        String formattedDate;
+		try {
+			formattedDate = sdf.format(sdf.parse(input));
+			if (formattedDate.equals(input)) {
+	            return true;
+	        } 
+	        else {
+	            return false;
+	        }
+		} catch (ParseException e) {
+			System.out.println("Invalid date");
+			return false;
+		}
+        
     }
 }

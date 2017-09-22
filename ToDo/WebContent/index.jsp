@@ -97,16 +97,26 @@
                   	    //$("#openNewTaskForm").hide();
                   	    console.log(data);
                   	    var jsonObj = JSON.parse(data);
-                  	  	//$('#ncTable').DataTable().draw();
-                  	  	//console.log(jsonObj.taskDescr);
-                  	    ncTable.rows.add([
-                  	    	{
-                  	    		'taskDescr': jsonObj.taskDescr,
-                  	    		'dueDate': jsonObj.dueDate,
-                  	    		'timeDue': jsonObj.timeDue
-                  	    	}
-                  	   ]).draw();
-                	  }
+                  	    console.log(jsonObj.validDate);
+                  	    if (jsonObj.validDate == "false") {
+                    		    alert('Invalid date. Please enter in mm/dd/yyyy format.');
+                    	    }
+                  	    else if (jsonObj.emptyTask == "false") {
+                  	    		alert('Please enter a task description.');
+                  	    }
+                  	    else {
+	                  	  	//$('#ncTable').DataTable().draw();
+	                  	  	//console.log(jsonObj.taskDescr);
+	                  	    ncTable.rows.add([
+	                  	    	{
+	                  	    		'taskDescr': jsonObj.taskDescr,
+	                  	    		'dueDate': jsonObj.dueDate,
+	                  	    		'timeDue': jsonObj.timeDue
+	                  	    	}
+	                  	   ]).draw();
+	                  	   document.getElementById("formAddTask").reset();
+                  	    }
+                	    }
                 });
         });
         });
@@ -118,26 +128,6 @@
 	              	selectHour += '<option val=' + i + '>' + i + '</option>';
 	            }
 	            $('#addHour').html(selectHour);
-	        });
-        </script>
-        <script type="text/javascript">
-	        $(function(){
-	            var selectMin = '';
-	            for (i=0;i<=9;i++){
-	              	selectMin += '<option val=' + i + '>' + 0 + i + '</option>';
-	            }
-	            for (i=10;i<=59;i++){
-	             	selectMin += '<option val=' + i + '>' + i + '</option>';
-	            }
-	            $('#addMinute').html(selectMin);
-	        });
-        </script>
-        <script type="text/javascript">
-	        $(function(){
-	            var selectHour = '';
-	            for (i=1;i<=12;i++){
-	              	selectHour += '<option val=' + i + '>' + i + '</option>';
-	            }
 	            $('#editHour').html(selectHour);
 	        });
         </script>
@@ -150,9 +140,11 @@
 	            for (i=10;i<=59;i++){
 	             	selectMin += '<option val=' + i + '>' + i + '</option>';
 	            }
+	            $('#addMinute').html(selectMin);
 	            $('#editMinute').html(selectMin);
 	        });
         </script>
+
         <title>To Do List</title>
     </head>
     <body>
@@ -178,12 +170,12 @@
         <thead>
             <tr>
                 <th><a href="#" class="completeButton">Complete</a></th>
-                <th style="width: 68%;">Task</th>
-                <th>Due</th>
-                <th>Time</th>
-                <th>Delete</th>
-                <th>Edit</th>
-                <th>Details</th>
+                <th style="width: 80%;">Task</th>
+                <th style="width: 1%;">Due</th>
+                <th style="width: 1%;">Time</th>
+                <th style="width: 1%;">Delete</th>
+                <th style="width: 1%;">Edit</th>
+                <th style="width: 1%;">Details</th>
             </tr>
         </thead>
         <tbody>
@@ -196,7 +188,7 @@
 	    <a class="close" href="#">X</a>
 	    <p class="title">Add Task</p>
 	    <div class="content">
-	    <form method="post" action="DataTableServlet" id="formAddTask" onsubmit="return validateSaveAliasForm()" >
+	    <form method="post" action="DataTableServlet" id="formAddTask">
 	    <table width="100%">
                 <tr>
                    <td><h4>Task: </h4></td>
@@ -228,8 +220,8 @@
                         <select id='addHour' name='addHour'></select> :
                         <select id='addMinute' name='addMinute'></select>
                         <select id='addAmPm' name='addAmPm'>
-                        		<option value='AM' >AM</option>
-  							<option value='PM'>PM</option>
+                        		<option value='am'>AM</option>
+  							<option value='pm'>PM</option>
                         </select>
                     </td>
                  </tr>

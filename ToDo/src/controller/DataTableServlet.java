@@ -37,7 +37,6 @@ public class DataTableServlet extends HttpServlet {
 		response.setContentType("text/plain");
         String strTdl = tdl.showNotCompleted();
         response.getWriter().print(strTdl);
-        System.out.println("In doGet");
 	}
 
 	/**
@@ -45,21 +44,39 @@ public class DataTableServlet extends HttpServlet {
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		//doGet(request, response);
-		System.out.println("Received request");
-		System.out.println(request.getParameter("type"));
+		//System.out.println("Received request");
+		//System.out.println(request.getParameter("type"));
 		if (request.getParameter("type").equals("btnAddTask")) {
-		//if (request.getParameter("btnAddTask") != null) {
+			PrintWriter out = response.getWriter();
 			System.out.println(request.getParameter("txbAddTaskDes"));
 			String taskDesc = request.getParameter("txbAddTaskDes").trim();
 			String details = request.getParameter("txtAreaAddDetails").trim();
 			String hour = request.getParameter("addHour");
 			String minute = request.getParameter("addMinute");
 			String amPm = request.getParameter("addAmPm");
-			String dueTime = hour + ":" + minute + " " + amPm;
-			String addTask = tdl.addTask(taskDesc, details, "5/22/1992", dueTime);
-			PrintWriter out = response.getWriter();
-			System.out.println(tdl.showNotCompleted());
-			out.println(addTask);
+			String dueTime = hour + ":" + minute + amPm;
+			String dueDate = request.getParameter("txbDueDate");
+			boolean validDate = tdl.isValidDate(dueDate);
+			if (validDate == true && !taskDesc.equals("")) {
+				String addTask = tdl.addTask(taskDesc, details, dueDate, dueTime);
+				System.out.println(tdl.showNotCompleted());
+				out.println(addTask);
+			}
+			else if (validDate == false) {
+				System.out.println("Invalid date.");
+				out.println("{\n" + 
+						"	\"validDate\": \"false\"\n" + 
+						"}");
+				/*out.println("<script type=\"text/javascript\">");
+				out.println("alert('Invalid date. Please enter in mm/dd/yyyy format.');");
+				out.println("</script>");*/
+			}
+			else if (taskDesc.equals("")) {
+				System.out.println("Please enter a task description.");
+				out.println("{\n" + 
+						"	\"emptyTask\": \"false\"\n" + 
+						"}");
+			}
 			//out.println(taskDesc + " " + details + " " + dueTime);
 			//response.getWriter().write(addTask);
 			//response.sendRedirect("index.jsp");
