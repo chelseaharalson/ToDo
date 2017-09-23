@@ -410,22 +410,17 @@
     <div class="lightbox" id="openDetails">
 	<div class="box">
 	    <a class="close" href="#">X</a>
-	    <p class="title">Details</p>
+	    <p class="title">View Details</p>
 	    <div class="content">
-	    <form method="post" action="SaveDetails" onsubmit="return validateSaveAliasForm()" >
 	    <table width="100%">
                 <tr>
                    <td><h4>Details: </h4></td>
                    <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
                    <td> 
-                       <textarea rows='3' data-min-rows='3'></textarea>  
-                   </td>
-                   <td>
-                       <button class="btn btn-1 btn-1a icon-newitem"><span>Submit</span></button>
+                       <textarea rows='3' data-min-rows='3' style="width: 700px; height: 100px;"></textarea>  
                    </td>
                  </tr>
             </table>
-            </form>
             </div>
           </div>
     </div>
