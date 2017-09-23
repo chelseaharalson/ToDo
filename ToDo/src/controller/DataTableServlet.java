@@ -87,8 +87,13 @@ public class DataTableServlet extends HttpServlet {
 					"	\"deleteAll\": \"success\"\n" + 
 					"}");
 		}
-		else if (request.getParameter("action3") != null) {
-		    // Invoke action 3.
+		else if (request.getParameter("type").equals("btnDeleteTask")) {
+			String strId = request.getParameter("rowId").trim();
+			Integer id = Integer.parseInt(strId);
+		    tdl.deleteTask(id);
+		    out.println("{\n" + 
+					"	\"deleteTask\": \"success\"\n" + 
+					"}");
 		}
 		else {
 			System.out.println("Confused");

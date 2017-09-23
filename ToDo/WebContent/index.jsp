@@ -42,12 +42,12 @@
                     {
                     	   "data": null,
                         className: "center",
-                        defaultContent: '<a href=""><img src="images/delete.png"></a>'
+                        defaultContent: '<button id="btnDeleteTask" onClick=deleteTask($(this).closest(\'tr\').index()) style="border: none; background: none;"><img src="images/delete.png"></button>'
                     },
                     {
                        "data": null,
                         className: "center",
-                        defaultContent: '<a href="#openEdit" onclick="editTask(this)"><img src="images/edit.png"></a>'
+                        defaultContent: '<a href="#openEdit" id="btnEdit" onClick=editTask($(this).closest(\'tr\').index())><img src="images/edit.png"></a>'
                     },
                     {
                        "data": null,
@@ -118,7 +118,7 @@
 	                  	    	}
 	                  	   ]).draw();
 	                  	   var temp = document.getElementById("notCompletedList").tBodies[0].rows.length - 1;
-	                  	   var lastRow = document.getElementById("notCompletedList").tBodies[0].rows[ temp ];
+	                  	   var lastRow = document.getElementById("notCompletedList").tBodies[0].rows[temp];
 	                  	   lastRow.setAttribute('id', jsonObj.id);
 	                  	    //$(newRow).attr('id', jsonObj.id);
 	                  	   //console.log(jsonObj.id);
@@ -130,25 +130,21 @@
                 });
         });
         });
-        
-        $('#notCompletedList tbody').on( 'click', 'tr', function () {
-            alert( 'Row index: '+ncTable.row( this ).index() );
-        } );
-        
-        	function editTask (obj) {
-       		var rowID = $(obj).attr('id');
-	        alert(rowID);
-	    	    var txbAddTaskDes = document.getElementById('txbAddTaskDes');
-	    		var txbAddDetails = document.getElementById('txtAreaAddDetails');
-	    		var txbDueDate = document.getElementById('txbDueDate');
-	    		var ddHoursElement = document.getElementById("addHour");
-	        var ddHoursVal = ddHoursElement.options[ddHoursElement.selectedIndex].value;
-	        var ddMinutesElement = document.getElementById("addMinute");
-	        var ddMinutesVal = ddMinutesElement.options[ddMinutesElement.selectedIndex].value;
-	        var ddAmPmElement = document.getElementById("addAmPm");
-	        var ddAmPmVal = ddAmPmElement.options[ddAmPmElement.selectedIndex].value;
-	        var ncCells = notCompletedList.rows.item(rowID).cells;
-	        txbAddTaskDes.value = ncCells[1].innerHTML.trim();
+
+        	function editTask(rowId) {
+        		//alert(rowId);
+	    	    var txbEditTaskDes = document.getElementById('txbEditTask');
+	    		var txbEditDetails = document.getElementById('txtAreaEditDetails');
+	    		var txbEditDueDate = document.getElementById('txbEditTask');
+	    		var ddEditHoursElement = document.getElementById("editHour");
+	        var ddEditHoursVal = ddEditHoursElement.options[ddEditHoursElement.selectedIndex].value;
+	        var ddEditMinutesElement = document.getElementById("editMinute");
+	        var ddEditMinutesVal = ddEditMinutesElement.options[ddEditMinutesElement.selectedIndex].value;
+	        var ddEditAmPmElement = document.getElementById("editAmPm");
+	        var ddEditAmPmVal = ddEditAmPmElement.options[ddEditAmPmElement.selectedIndex].value;
+	        var ncCells = notCompletedList.rows.item(rowId+1).cells;
+	        //alert(ncCells[1].innerHTML.trim());
+	        txbEditTaskDes.value = ncCells[1].innerHTML.trim();
 	    	 }
         	
         	$(function() {
@@ -173,6 +169,93 @@
 	                    		}
 	                	    }
 	                });
+	        });
+        	});
+        	
+        	function deleteTask(rowId) {
+        		console.log("deleteTask");
+           	var thisRow = document.getElementById("notCompletedList").tBodies[0].rows[rowId];
+           	$(thisRow).addClass('selected');
+        		$.ajax({
+                 url: 'displayData',
+                 type: 'post',
+                 method: 'post',
+                 data: {
+                 	'type': 'btnDeleteTask',
+                 	'rowId': thisRow.getAttribute('id')
+                 },
+                 dataType: 'text',
+                 success: function(data) {
+	            		var jsonObj = JSON.parse(data);
+	            		if (jsonObj.deleteTask == "success") {
+	            			$('#notCompletedList').DataTable().row(rowId).remove().draw();
+	            			alert("Deleted task succesfully.");
+	            		}
+	            		else {
+	            			alert("Please try again.");
+	            		}
+                 }    
+        		});
+        	}
+        	
+        	$(function() {
+	        	$('#formEditTask').on('submit', function(event) {
+	        		event.preventDefault();
+                var txbAddDes = document.getElementById("txbAddTaskDes").value;
+                var txbAddDet = document.getElementById("txtAreaAddDetails").value;
+                var txbDueD = document.getElementById("txbDueDate").value;
+                var ddHoursElement = document.getElementById("addHour");
+                var ddHoursVal = ddHoursElement.options[ddHoursElement.selectedIndex].value;
+                var ddMinutesElement = document.getElementById("addMinute");
+                var ddMinutesVal = ddMinutesElement.options[ddMinutesElement.selectedIndex].value;
+                var ddAmPmElement = document.getElementById("addAmPm");
+                var ddAmPmVal = ddAmPmElement.options[ddAmPmElement.selectedIndex].value;
+              	  $.ajax({
+                    url: 'displayData',
+                    type: 'post',
+                    method: 'post',
+                    data: { 
+                        'type': 'btnAddTask',
+                        'txbAddTaskDes': txbAddDes,
+                        'txtAreaAddDetails': txbAddDet,
+                        'txbDueDate': txbDueD,
+                        'addHour': ddHoursVal,
+                        'addMinute': ddMinutesVal,
+                        'addAmPm': ddAmPmVal
+                    },
+                    dataType: 'text',
+                    success: function(data) {
+                  	    console.log(data);
+                  	    var jsonObj = JSON.parse(data);
+                  	    console.log(jsonObj.validDate);
+                  	    if (jsonObj.validDate == "false") {
+                    		    alert('Invalid date. Please enter in mm/dd/yyyy format.');
+                    	    }
+                  	    else if (jsonObj.emptyTask == "false") {
+                  	    		alert('Please enter a task description.');
+                  	    }
+                  	    else {
+	                  	  	//$('#ncTable').DataTable().draw();
+	                  	  	//console.log(jsonObj.taskDescr);
+	                  	  	newRowId = jsonObj.id;
+	                  	    var newRow = ncTable.rows.add([
+	                  	    	{
+	                  	    		'taskDescr': jsonObj.taskDescr,
+	                  	    		'dueDate': jsonObj.dueDate,
+	                  	    		'timeDue': jsonObj.timeDue
+	                  	    	}
+	                  	   ]).draw();
+	                  	   var temp = document.getElementById("notCompletedList").tBodies[0].rows.length - 1;
+	                  	   var lastRow = document.getElementById("notCompletedList").tBodies[0].rows[ temp ];
+	                  	   lastRow.setAttribute('id', jsonObj.id);
+	                  	    //$(newRow).attr('id', jsonObj.id);
+	                  	   //console.log(jsonObj.id);
+	                  	   //newRow.setAttribute('id', jsonObj.id);
+	                  	   document.getElementById("formAddTask").reset();
+	                  	   //$("#openNewTaskForm").hide();
+                  	    }
+                	    }
+                });
 	        });
         	});
         </script>
@@ -336,7 +419,7 @@
 	    <a class="close" href="#">X</a>
 	    <p class="title">Edit Task</p>
 	    <div class="content">
-	    <form method="post" action="EditTask" onsubmit="return validateSaveAliasForm()" >
+	    <form method="post" action="formEditTask" onsubmit="" >
 	    <table width="100%">
                 <tr>
                    <td><h4>Task: </h4></td>
@@ -348,7 +431,7 @@
                     <td><h4>Due Date: </h4></td>
                     <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
                     <td>
-                        <input value="" type="text" id="txbDueDate" name="txbDueDate" maxlength="10" style="width: 140px;" placeholder='mm/dd/yyyy' />
+                        <input value="" type="text" id="txbEditDueDate" name="txbEditDueDate" maxlength="10" style="width: 140px;" placeholder='mm/dd/yyyy' />
                     </td>
                  </tr>
                 <tr>
@@ -358,7 +441,7 @@
                    <td><h4>Details: </h4></td>
                    <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
                    <td> 
-                       <textarea rows='3' data-min-rows='3'></textarea>  
+                       <textarea rows='3' data-min-rows='3' id="txtAreaEditDetails"></textarea>  
                    </td>
                    <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
                     <td><h4>Due Time: </h4></td>
