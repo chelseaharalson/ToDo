@@ -1,6 +1,6 @@
 var ncTable;
 $(document).ready(function() {
-    ncTable = $("#notCompletedList").DataTable( {
+    ncTable = $("#taskTable").DataTable( {
         "ajax": "displayData",
         "rowId": "id",
         "bFilter": false,
@@ -94,8 +94,8 @@ $(function() {
               	    		'timeDue': jsonObj.timeDue
               	    	}
               	   ]).draw();
-              	   var temp = document.getElementById("notCompletedList").tBodies[0].rows.length - 1;
-              	   var lastRow = document.getElementById("notCompletedList").tBodies[0].rows[temp];
+              	   var temp = document.getElementById("taskTable").tBodies[0].rows.length - 1;
+              	   var lastRow = document.getElementById("taskTable").tBodies[0].rows[temp];
               	   lastRow.setAttribute('id', jsonObj.id);
               	    //$(newRow).attr('id', jsonObj.id);
               	   //console.log(jsonObj.id);
@@ -119,7 +119,7 @@ function editTask(rowId) {
 	var ddEditMinutesVal = ddEditMinutesElement.options[ddEditMinutesElement.selectedIndex].value;
 	var ddEditAmPmElement = document.getElementById("editAmPm");
 	var ddEditAmPmVal = ddEditAmPmElement.options[ddEditAmPmElement.selectedIndex].value;
-	var ncCells = notCompletedList.rows.item(rowId+1).cells;
+	var ncCells = taskTable.rows.item(rowId+1).cells;
 	//alert(ncCells[1].innerHTML.trim());
 	txbEditTaskDes.value = ncCells[1].innerHTML.trim();
 	txbEditDueDate.value = ncCells[2].innerHTML.trim();
@@ -193,8 +193,8 @@ $(function() {
 	          	    		'timeDue': jsonObj.timeDue
 	          	    	}
 	          	   ]).draw();
-	          	   var temp = document.getElementById("notCompletedList").tBodies[0].rows.length - 1;
-	          	   var lastRow = document.getElementById("notCompletedList").tBodies[0].rows[ temp ];
+	          	   var temp = document.getElementById("taskTable").tBodies[0].rows.length - 1;
+	          	   var lastRow = document.getElementById("taskTable").tBodies[0].rows[ temp ];
 	          	   lastRow.setAttribute('id', jsonObj.id);
 	          	    //$(newRow).attr('id', jsonObj.id);
 	          	   //console.log(jsonObj.id);
@@ -221,7 +221,7 @@ $(function() {
             success: function(data) {
             		var jsonObj = JSON.parse(data);
             		if (jsonObj.deleteAll == "success") {
-            			$('#notCompletedList').DataTable().clear().draw();
+            			$('#taskTable').DataTable().clear().draw();
             			//alert("All tasks deleted succesfully.");
             		}
             		else {
@@ -233,7 +233,7 @@ $(function() {
 });
 	
 function deleteTask(rowId) {
-var thisRow = document.getElementById("notCompletedList").tBodies[0].rows[rowId];
+var thisRow = document.getElementById("taskTable").tBodies[0].rows[rowId];
 $(thisRow).addClass('selected');
 	$.ajax({
      url: 'displayData',
@@ -247,7 +247,7 @@ $(thisRow).addClass('selected');
      success: function(data) {
     		var jsonObj = JSON.parse(data);
     		if (jsonObj.deleteTask == "success") {
-    			$('#notCompletedList').DataTable().row(rowId).remove().draw();
+    			$('#taskTable').DataTable().row(rowId).remove().draw();
     			//alert("Deleted task succesfully.");
     		}
     		else {
@@ -270,3 +270,30 @@ function viewDetails(rowId) {
 	    }
 	});
 }
+
+$(function() {
+	$('#formCompleteTask').on('submit', function(event) {
+        event.preventDefault();
+        var tableControl = document.getElementById('taskTable');
+        var arrayOfValues = [];
+         $('#btnComplete').click(function() {
+        	 	var checkedValues = $("input:checkbox:checked", "#taskTable").map(function() {
+        	        return $(this).val();
+        	    }).get();
+        	    alert(checkedValues.join(','));
+         });
+         
+      	  $.ajax({
+            url: 'displayData',
+            type: 'post',
+            method: 'post',
+            data: {
+            	'type': 'btnComplete'
+            },
+            dataType: 'text',
+            success: function(data) {
+
+        	    }
+        });
+});
+});

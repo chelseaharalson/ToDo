@@ -35,26 +35,32 @@ public class ToDo {
         currentTime = LocalTime.now();
         isComplete = false;
         
-        /*try {
-			checkOverdue();
-		} catch (ParseException e) {
-			e.printStackTrace();
-		}*/
+        checkOverdue(dueDate, timeDue);
     }
     
-    public void checkOverdue() throws ParseException {
+    public void checkOverdue(String pDueDate, String pTimeDue) {
         // Setting if the task is overdue based on date and time
-      	Date dueDateObj = new SimpleDateFormat("yyyy-mm-dd", Locale.ENGLISH).parse(dueDate);
-        LocalDate localDueDate = new java.sql.Date(dueDateObj.getTime()).toLocalDate();
-        
-        Date timeDueObj = new SimpleDateFormat("hh:mm a", Locale.ENGLISH).parse(timeDue);
-        Instant instant = Instant.ofEpochMilli(timeDueObj.getTime());
-        LocalTime localTimeDue = LocalDateTime.ofInstant(instant, ZoneId.systemDefault()).toLocalTime();
-        if (currentDate.isAfter(localDueDate) && currentTime.isAfter(localTimeDue)) {
-            isOverdue = true;
-        }
-        else {
-            isOverdue = false;
-        }
+		try {
+			Date dueDateObj = new SimpleDateFormat("MM/dd/yyyy", Locale.ENGLISH).parse(pDueDate);
+			LocalDate localDueDate = new java.sql.Date(dueDateObj.getTime()).toLocalDate();
+	        Date timeDueObj = new SimpleDateFormat("hh:mm a", Locale.ENGLISH).parse(pTimeDue);
+	        Instant instant = Instant.ofEpochMilli(timeDueObj.getTime());
+	        LocalTime localTimeDue = LocalDateTime.ofInstant(instant, ZoneId.systemDefault()).toLocalTime();
+	        /*System.out.println("currentDate: " + currentDate);
+	        System.out.println("currentTimeDue: " + currentTime);
+	        System.out.println("localDueDate: " + localDueDate);
+	        System.out.println("localTimeDue: " + localTimeDue);*/
+	        if (currentDate.isAfter(localDueDate) /*&& currentTime.isAfter(localTimeDue)*/) {
+	            isOverdue = true;
+	            System.out.println("Task is overdue");
+	        }
+	        else {
+	            isOverdue = false;
+	            System.out.println("Task is NOT overdue");
+	        }
+		} catch (ParseException e) {
+			//e.printStackTrace();
+			System.out.println("Parse exception");
+		}
     }
 }

@@ -23,8 +23,8 @@ public class ToDoList {
         toDoList = new ArrayList<ToDo>();
         taskCount = 0;
         
-        addTask("This is my first task", "Details!!!!!!", "05/22/2017", "2:22 AM");
-        addTask("This is my second task", "Details2!!!!!!", "05/22/2017", "5:00 PM");
+        addTask("This is my first task", "Details!!!!!!", "05/22/2017", "4:22 AM");
+        addTask("This is my second task", "Details2!!!!!!", "12/22/2017", "5:00 PM");
     }
     
     public String addTask(String pTaskDescr, String pDetail, String pDueDate, String pTimeDue) {
@@ -72,7 +72,7 @@ public class ToDoList {
     }
     
     public void completeAllTasks() {
-        for (int i = 0; i < toDoList.size(); i++) {     // Removing a specific task
+        for (int i = 0; i < toDoList.size(); i++) {
             toDoList.get(i).isComplete = true;
         }
     }
@@ -85,15 +85,12 @@ public class ToDoList {
     public String showNotCompleted() {
         ArrayList<ToDo> notCompletedList = new ArrayList<ToDo>();
         for (int i = 0; i < toDoList.size(); i++) {
-        		// checkoverdue
+        		//checkOverdue(toDoList.get(i).dueDate, toDoList.get(i).timeDue);
             if (toDoList.get(i).isComplete == false) {
                 notCompletedList.add(toDoList.get(i));
             }
         }
-        // Return not completed list as json
-        //Gson gson = new Gson();
-        //String json = gson.toJson(notCompletedList);
-        
+
         String resultString = "{\"data\":[";
         for (int i = 0; i < notCompletedList.size(); i++) {
         		resultString += toDoObjToAjaxString(notCompletedList.get(i));

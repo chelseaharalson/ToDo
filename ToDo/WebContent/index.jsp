@@ -61,25 +61,34 @@
               <td width="40%"><a href="#openNewTaskForm"><button class="btn btn-1 btn-1a icon-newitem"><span>New Item</span></button></a></td>
               <td width="40%">
               	  <form method="post" action="DataTableServlet" id="formCompleteAllTask">
-              		<button class="btn btn-1 btn-1a icon-complete"><span>Complete All</span></button>
+              		<button id="btnCompleteAll" class="btn btn-1 btn-1a icon-complete"><span>Complete All</span></button>
               	  </form>
               </td>
               <td width="40%">
               	<form method="post" action="DataTableServlet" id="formDeleteAllTask">
-              		<button class="btn btn-1 btn-1a icon-remove" id="btnDeleteAll"><span>Delete All</span></button>
+              		<button id="btnDeleteAll" class="btn btn-1 btn-1a icon-remove" id="btnDeleteAll"><span>Delete All</span></button>
               	</form>
               </td>
               <td width="40%">
               	  <form method="post" action="DataTableServlet" id="formShowAllTask">
-              		<button class="btn btn-1 btn-1a icon-show"><span>Show All</span></button>
+              		<button id="btnShowAll" class="btn btn-1 btn-1a icon-show"><span>Show All</span></button>
+              	  </form>
+              </td>
+              <td width="40%">
+              	  <form method="post" action="DataTableServlet" id="formShowNotCompleted">
+              		<button id="btnShowNotCompleted" class="btn btn-1 btn-1a icon-shownotcomplete"><span>Show Not Completed</span></button>
               	  </form>
               </td>
             </tr>
         </table>
-        <table id="notCompletedList" class="display notCompletedList" cellspacing="0" width="100%">
+        <table id="taskTable" class="display taskTable" cellspacing="0" width="100%">
         <thead>
             <tr>
-                <th><a href="#" class="completeButton">Complete</a></th>
+                <th>
+                		<form method="post" action="DataTableServlet" id="formCompleteTask">
+                			<button type="submit" id="btnComplete" class="completeButton"><span>COMPLETE</span></button>
+                		</form>
+                </th>
                 <th style="width: 80%;">Task</th>
                 <th style="width: 1%;">Due</th>
                 <th style="width: 9%;">Time</th>
@@ -137,7 +146,7 @@
                  </tr>
             </table>
             <center>
-            	<button type="submit" class="btn btn-1 btn-1a icon-newitem" name="btnAddTask" onclick="" >
+            	<button type="submit" class="btn btn-1 btn-1a icon-newitem" name="btnAddTask" >
             		<span>Submit</span>
             	</button>
             </center>
