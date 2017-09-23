@@ -245,7 +245,7 @@
 	                    		var jsonObj = JSON.parse(data);
 	                    		if (jsonObj.deleteAll == "success") {
 	                    			$('#notCompletedList').DataTable().clear().draw();
-	                    			alert("All tasks deleted succesfully.");
+	                    			//alert("All tasks deleted succesfully.");
 	                    		}
 	                    		else {
 	                    			alert("Please try again.");
@@ -271,7 +271,7 @@
 	            		var jsonObj = JSON.parse(data);
 	            		if (jsonObj.deleteTask == "success") {
 	            			$('#notCompletedList').DataTable().row(rowId).remove().draw();
-	            			alert("Deleted task succesfully.");
+	            			//alert("Deleted task succesfully.");
 	            		}
 	            		else {
 	            			alert("Please try again.");

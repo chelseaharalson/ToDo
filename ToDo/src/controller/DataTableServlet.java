@@ -54,7 +54,7 @@ public class DataTableServlet extends HttpServlet {
 			String hour = request.getParameter("addHour");
 			String minute = request.getParameter("addMinute");
 			String amPm = request.getParameter("addAmPm");
-			String dueTime = hour + ":" + minute + amPm;
+			String dueTime = hour + ":" + minute + " " + amPm;
 			String dueDate = request.getParameter("txbDueDate");
 			boolean validDate = tdl.isValidDate(dueDate);
 			if (validDate == true && !taskDesc.equals("")) {
