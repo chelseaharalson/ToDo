@@ -101,9 +101,18 @@ public class DataTableServlet extends HttpServlet {
 			String dueDate = request.getParameter("txbEditDueDate");
 			boolean validDate = tdl.isValidDate(dueDate);
 			if (validDate == true && !taskDesc.equals("")) {
-				String editTask = tdl.editTask(id, taskDesc, details, dueDate, dueTime);
-				System.out.println(tdl.showNotCompleted());
-				out.println(editTask);
+				boolean editSuccess = tdl.editTask(id, taskDesc, details, dueDate, dueTime);
+				if (editSuccess == true) {
+					System.out.println(tdl.showNotCompleted());
+					out.println("{\n" + 
+							"	\"successEdit\": \"true\"\n" + 
+							"}");
+				}
+				else {
+					out.println("{\n" + 
+							"	\"successEdit\": \"false\"\n" + 
+							"}");
+				}
 			}
 			else if (validDate == false) {
 				System.out.println("Invalid date.");
@@ -117,6 +126,14 @@ public class DataTableServlet extends HttpServlet {
 						"	\"emptyTask\": \"false\"\n" + 
 						"}");
 			}
+		}
+		else if (request.getParameter("type").equals("btnViewDetails")) {
+			String strId = request.getParameter("rowId").trim();
+			Integer id = Integer.parseInt(strId);
+			String resultString = tdl.escapeQuotes(tdl.getDetails(id));
+			out.println("{\n" + 
+					"	\"details\": \"" + resultString + "\"\n" + 
+					"}");
 		}
 		else {
 			System.out.println("Confused");

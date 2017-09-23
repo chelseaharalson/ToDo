@@ -52,19 +52,17 @@ public class ToDoList {
         }
     }
     
-    public String editTask(Integer pTaskID, String pTaskDescr, String pDetail, String pDueDate, String pTimeDue) {
+    public boolean editTask(Integer pTaskID, String pTaskDescr, String pDetail, String pDueDate, String pTimeDue) {
         for (int i = 0; i < toDoList.size(); i++) {
             if (toDoList.get(i).taskID == pTaskID) {
                 toDoList.get(i).taskDescr = pTaskDescr;
                 toDoList.get(i).detail = pDetail;
                 toDoList.get(i).dueDate = pDueDate;
                 toDoList.get(i).timeDue = pTimeDue;
-                break;
+                return true;
             }
         }
-        String resultString = toDoObjToAjaxString(toDoList.get(pTaskID));
-        System.out.println(resultString);
-        return resultString;
+        return false;
     }
     
     public void completeTask(Integer pTaskID) {
@@ -115,12 +113,27 @@ public class ToDoList {
     
     public String toDoObjToAjaxString(ToDo td) {
 	    	String resultString = "";
-    		resultString += "{\"id\":\"" + td.taskID + "\",\"taskDescr\":\"" + td.taskDescr 
-    				+ "\",\"detail\":\"" + td.detail + "\",\"dueDate\":\"" + td.dueDate 
+    		resultString += "{\"id\":\"" + td.taskID + "\",\"taskDescr\":\"" + escapeQuotes(td.taskDescr) 
+    				+ "\",\"detail\":\"" + escapeQuotes(td.detail) + "\",\"dueDate\":\"" + td.dueDate 
     				+ "\",\"timeDue\":\"" + td.timeDue
     				+ "\",\"isComplete\":\"" + td.isComplete + "\",\"isOverdue\":\"" + td.isOverdue 
     				+ "\"}";
 	     return resultString;
+    }
+    
+    public String escapeQuotes(String input) {
+    		return input.replaceAll("\"", "\\\\\"");
+    }
+    
+    public String getDetails(Integer rowID) {
+    	String resultString = "";
+    		for (int i = 0; i < toDoList.size(); i++) {
+            if (toDoList.get(i).taskID == rowID) {
+                resultString = toDoList.get(i).detail;
+                return resultString;
+            }
+        }
+    		return "";
     }
     
     public boolean isValidDate(String input) {

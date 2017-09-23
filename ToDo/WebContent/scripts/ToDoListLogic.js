@@ -94,14 +94,10 @@ $(function() {
               	    		'timeDue': jsonObj.timeDue
               	    	}
               	   ]).draw();
-              	   var temp = document.getElementById("taskTable").tBodies[0].rows.length - 1;
+              	   var temp = document.getElementById("taskTable").tBodies[0].rows.length-1;
               	   var lastRow = document.getElementById("taskTable").tBodies[0].rows[temp];
               	   lastRow.setAttribute('id', jsonObj.id);
-              	    //$(newRow).attr('id', jsonObj.id);
-              	   //console.log(jsonObj.id);
-              	   //newRow.setAttribute('id', jsonObj.id);
               	   document.getElementById("formAddTask").reset();
-              	   //$("#openNewTaskForm").hide();
           	    }
         	    }
         });
@@ -144,6 +140,7 @@ function editTask(rowId) {
 	ddEditHoursElement.value = hour;
 	ddEditMinutesElement.value = min;
 	ddEditAmPmElement.value = amPm;
+	
 	var thisRow = document.getElementById("taskTable").tBodies[0].rows[rowId];
 	
 	$('#formEditTask').on('submit', function(event) {
@@ -182,8 +179,18 @@ function editTask(rowId) {
 	      	    else if (jsonObj.emptyTask == "false") {
 	      	    		alert('Please enter a task description.');
 	      	    }
-	      	    else {
-	          	  	alert("Edit successful");
+	      	    else if (jsonObj.successEdit == "true") {
+	      	    		var rowData = document.getElementById("taskTable").tBodies[0].rows[rowId].data();
+	      	    		alert(rowData[1]);
+	      	    		rowData[1] = txbEditDes;
+	      	    		rowData[2] = txbEditD;
+	      	    	    var strTime = ddEditHoursVal + ":" + ddEditMinutesVal + " " + ddEditAmPmVal;
+	      	    	    rowData[3] = strTime;
+	      	    	    $('#taskTable').DataTable().draw();
+	          	  	//alert("Edit successful");
+	      	    }
+	      	    else if (jsonObj.successEdit == "false") {
+	      	    		alert("Edit unsucessful. Data not found.");
 	      	    }
     	    }
     });
@@ -243,13 +250,17 @@ $(thisRow).addClass('selected');
 function viewDetails(rowId) {
 	// Populate details textbox
 	$.ajax({
-	    type: "GET",
+	    type: "post",
 	    url:"displayData",
 	    dataType: "text",
+	    data: {
+	      	'type': 'btnViewDetails',
+	    		'rowId': rowId
+	    },
 	    success: function(data) {
 	        var jsonObj = JSON.parse(data);
-	        //alert(data);
-	    	    $("#txtAreaViewDetails").val(data);
+	        //alert(jsonObj.details);
+	    	    $("#txtAreaViewDetails").val(jsonObj.details);
 	    }
 	});
 }
