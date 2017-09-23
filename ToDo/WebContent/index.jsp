@@ -89,9 +89,9 @@
                 			<button type="submit" id="btnComplete" class="completeButton"><span>COMPLETE</span></button>
                 		</form>
                 </th>
-                <th style="width: 80%;">Task</th>
-                <th style="width: 1%;">Due</th>
-                <th style="width: 9%;">Time</th>
+                <th id="colTaskDes" style="width: 80%;">Task</th>
+                <th id="colDueDate" style="width: 1%;">Due</th>
+                <th id="colTimeDue" style="width: 9%;">Time</th>
                 <th style="width: 1%;">Delete</th>
                 <th style="width: 1%;">Edit</th>
                 <th style="width: 1%;">Details</th>

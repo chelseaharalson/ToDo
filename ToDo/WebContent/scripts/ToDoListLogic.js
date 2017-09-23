@@ -146,6 +146,7 @@ function editTask(rowId) {
 	ddEditAmPmElement.value = amPm;
 	
 	var thisRow = document.getElementById("taskTable").tBodies[0].rows[rowId];
+	console.log("thisRow: " + thisRow.getAttribute('id'));
 	
 	$('#formEditTask').on('submit', function(event) {
 		event.preventDefault();
@@ -184,14 +185,13 @@ function editTask(rowId) {
 	      	    		alert('Please enter a task description.');
 	      	    }
 	      	    else if (jsonObj.successEdit == "true") {
-	      	    		var rowData = document.getElementById("taskTable").tBodies[0].rows[rowId].data();
-	      	    		alert(rowData[1]);
-	      	    		rowData[1] = txbEditDes;
-	      	    		rowData[2] = txbEditD;
-	      	    	    var strTime = ddEditHoursVal + ":" + ddEditMinutesVal + " " + ddEditAmPmVal;
-	      	    	    rowData[3] = strTime;
-	      	    	    $('#taskTable').DataTable().draw();
-	          	  	//alert("Edit successful");
+	      	    		console.log(rowId);
+	      	    		console.log(ncTable.row(rowId).column('#colDueTime').data());
+	      	    		ncCells[1].innerHTML = txbEditDes;
+	      	    		ncCells[2].innerHTML = txbEditD;
+	      	    		var strTime = ddEditHoursVal + ":" + ddEditMinutesVal + " " + ddEditAmPmVal;
+	      	    		ncCells[3].innerHTML = strTime;
+	      	    		$('#taskTable').DataTable().draw();
 	      	    }
 	      	    else if (jsonObj.successEdit == "false") {
 	      	    		alert("Edit unsucessful. Data not found.");

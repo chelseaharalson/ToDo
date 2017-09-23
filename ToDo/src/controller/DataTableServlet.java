@@ -46,6 +46,7 @@ public class DataTableServlet extends HttpServlet {
 		//doGet(request, response);
 		//System.out.println("Received request");
 		//System.out.println(request.getParameter("type"));
+		System.out.println(request);
 		PrintWriter out = response.getWriter();
 		if (request.getParameter("type").equals("btnAddTask")) {
 			System.out.println(request.getParameter("txbAddTaskDes"));
@@ -57,7 +58,7 @@ public class DataTableServlet extends HttpServlet {
 			String dueTime = hour + ":" + minute + " " + amPm;
 			String dueDate = request.getParameter("txbDueDate");
 			boolean validDate = tdl.isValidDate(dueDate);
-			if (validDate == true && !taskDesc.equals("")) {
+			if (validDate == true && !taskDesc.trim().equals("")) {
 				String addTask = tdl.addTask(taskDesc, details, dueDate, dueTime);
 				System.out.println(tdl.showNotCompleted());
 				out.println(addTask);
@@ -68,7 +69,7 @@ public class DataTableServlet extends HttpServlet {
 						"	\"validDate\": \"false\"\n" + 
 						"}");
 			}
-			else if (taskDesc.equals("")) {
+			else if (taskDesc.trim().equals("")) {
 				System.out.println("Please enter a task description.");
 				out.println("{\n" + 
 						"	\"emptyTask\": \"false\"\n" + 
@@ -90,7 +91,8 @@ public class DataTableServlet extends HttpServlet {
 					"}");
 		}
 		else if (request.getParameter("type").equals("btnSubmitEditTask")) {
-			String strId = request.getParameter("rowId").trim();
+			String strId = request.getParameter("rowId");
+			System.out.println("ID: " + strId);
 			Integer id = Integer.parseInt(strId);
 			String taskDesc = request.getParameter("txbEditTaskDes").trim();
 			String details = request.getParameter("txtAreaEditDetails").trim();
@@ -100,7 +102,7 @@ public class DataTableServlet extends HttpServlet {
 			String dueTime = hour + ":" + minute + " " + amPm;
 			String dueDate = request.getParameter("txbEditDueDate");
 			boolean validDate = tdl.isValidDate(dueDate);
-			if (validDate == true && !taskDesc.equals("")) {
+			if (validDate == true && !taskDesc.trim().equals("")) {
 				boolean editSuccess = tdl.editTask(id, taskDesc, details, dueDate, dueTime);
 				if (editSuccess == true) {
 					System.out.println(tdl.showNotCompleted());
@@ -120,7 +122,7 @@ public class DataTableServlet extends HttpServlet {
 						"	\"validDate\": \"false\"\n" + 
 						"}");
 			}
-			else if (taskDesc.equals("")) {
+			else if (taskDesc.trim().equals("")) {
 				System.out.println("Please enter a task description.");
 				out.println("{\n" + 
 						"	\"emptyTask\": \"false\"\n" + 
@@ -128,7 +130,7 @@ public class DataTableServlet extends HttpServlet {
 			}
 		}
 		else if (request.getParameter("type").equals("btnViewDetails")) {
-			String strId = request.getParameter("rowId").trim();
+			String strId = request.getParameter("rowId");
 			Integer id = Integer.parseInt(strId);
 			String resultString = tdl.escapeQuotes(tdl.getDetails(id));
 			out.println("{\n" + 
@@ -138,6 +140,7 @@ public class DataTableServlet extends HttpServlet {
 		else {
 			System.out.println("Confused");
 		}
+		out.close();
 	}
 
 }
