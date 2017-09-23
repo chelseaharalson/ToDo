@@ -121,13 +121,17 @@ function editTask(rowId) {
 	txbEditDueDate.value = ncCells[2].innerHTML.trim();
 	// Populate details textbox
 	$.ajax({
-	    type: "GET",
+	    type: "post",
 	    url:"displayData",
 	    dataType: "text",
+	    data: {
+	      	'type': 'btnViewDetails',
+	    		'rowId': rowId
+	    },
 	    success: function(data) {
 	        var jsonObj = JSON.parse(data);
-	        //alert(data);
-	    	    $("#txtAreaEditDetails").val(data);
+	        //alert(jsonObj.details);
+	    	    $("#txtAreaEditDetails").val(jsonObj.details);
 	    }
 	});
 	//alert(ncCells[3].innerHTML.trim());
