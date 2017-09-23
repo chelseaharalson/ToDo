@@ -160,23 +160,10 @@
 	        //alert(ncCells[3].innerHTML.trim());
 	        var timeArr = ncCells[3].innerHTML.trim().split(":");
 	        var hour = timeArr[0];
-	        //alert(hour);
-	        //alert(timeArr[1]);
-	        amPmVal = timeArr[1];
-	        amPmVal2 = timeArr[1];
-	        var tempMin;
-	        var amPm;
-	        if (amPmVal[2] == "A") {
-	        		tempMin = amPmVal.split("A");
-	        		amPm = "AM";
-	        }
-	        else if (amPmVal[2] == "P") {
-	        		tempMin = amPmVal.split("P");
-	        		amPm = "PM";
-	        }
-	        min = tempMin[0];
-	        //alert(min);
-	        //alert(amPm);
+	        var tempMin = timeArr[1].split(" ");
+	        var min = tempMin[0];
+	        var amPm = tempMin[1];
+	        
 	        ddEditHoursElement.value = hour;
 	        ddEditMinutesElement.value = min;
 	        ddEditAmPmElement.value = amPm;
@@ -356,7 +343,7 @@
                 <th><a href="#" class="completeButton">Complete</a></th>
                 <th style="width: 80%;">Task</th>
                 <th style="width: 1%;">Due</th>
-                <th style="width: 1%;">Time</th>
+                <th style="width: 9%;">Time</th>
                 <th style="width: 1%;">Delete</th>
                 <th style="width: 1%;">Edit</th>
                 <th style="width: 1%;">Details</th>
@@ -438,11 +425,6 @@
                    </td>
                  </tr>
             </table>
-            <center>
-            	<button type="submit" class="btn btn-1 btn-1a icon-newitem" onclick="" >
-            		<span>Submit</span>
-            	</button>
-            </center>
             </form>
             </div>
           </div>
