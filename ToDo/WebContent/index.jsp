@@ -421,7 +421,7 @@
                        <textarea rows='3' data-min-rows='3'></textarea>  
                    </td>
                    <td>
-                       <button class="btn btn-1 btn-1a icon-remove"><span>Delete</span></button>
+                       <button class="btn btn-1 btn-1a icon-newitem"><span>Submit</span></button>
                    </td>
                  </tr>
             </table>
