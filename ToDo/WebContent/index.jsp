@@ -184,7 +184,7 @@
                    <td><h4>Task: </h4></td>
                    <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
                    <td> 
-                       <input value="" type="text" id="txbEditTask" name="txbEditTask" style="width: 400px;" />  
+                       <input value="" type="text" id="txbEditTaskDes" name="txbEditTaskDes" style="width: 400px;" />  
                    </td>
                    <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
                     <td><h4>Due Date: </h4></td>

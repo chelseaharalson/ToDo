@@ -23,8 +23,15 @@ public class ToDoList {
         toDoList = new ArrayList<ToDo>();
         taskCount = 0;
         
-        addTask("This is my first task", "Details!!!!!!", "05/22/2017", "4:22 AM");
-        addTask("This is my second task", "Details2!!!!!!", "12/22/2017", "5:00 PM");
+        addTask("Complete tasks", "Get checked values and transfer to other table", "05/22/2017", "4:22 AM");
+        addTask("Complete all tasks", "", "09/25/2017", "4:00 PM");
+        addTask("Show not completed list", "...", "09/25/2017", "4:00 PM");
+        addTask("Show all list", "...", "09/25/2017", "4:00 PM");
+        addTask("Finish edit", "This will also get view details to work", "09/25/2017", "5:00 AM");
+        addTask("View details", "...", "09/25/2017", "4:00 PM");
+        addTask("Fix checkOverdue logic", "", "09/25/2017", "4:00 PM");
+        addTask("If overdue, turn red", "...", "09/23/2017", "4:00 PM");
+        addTask("JUNIT tests", "...", "09/23/2017", "1:00 PM");
     }
     
     public String addTask(String pTaskDescr, String pDetail, String pDueDate, String pTimeDue) {
@@ -45,16 +52,18 @@ public class ToDoList {
         }
     }
     
-    public void editTask(Integer pTaskID, String pTaskDescr, String pDetail, String pDueDate, String pTimeDue) {
+    public String editTask(Integer pTaskID, String pTaskDescr, String pDetail, String pDueDate, String pTimeDue) {
         for (int i = 0; i < toDoList.size(); i++) {
             if (toDoList.get(i).taskID == pTaskID) {
                 toDoList.get(i).taskDescr = pTaskDescr;
                 toDoList.get(i).detail = pDetail;
                 toDoList.get(i).dueDate = pDueDate;
                 toDoList.get(i).timeDue = pTimeDue;
-                return;
+                break;
             }
         }
+        String resultString = toDoObjToAjaxString(toDoList.get(pTaskID));
+        return resultString;
     }
     
     public void completeTask(Integer pTaskID) {

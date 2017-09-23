@@ -67,9 +67,6 @@ public class DataTableServlet extends HttpServlet {
 				out.println("{\n" + 
 						"	\"validDate\": \"false\"\n" + 
 						"}");
-				/*out.println("<script type=\"text/javascript\">");
-				out.println("alert('Invalid date. Please enter in mm/dd/yyyy format.');");
-				out.println("</script>");*/
 			}
 			else if (taskDesc.equals("")) {
 				System.out.println("Please enter a task description.");
@@ -77,9 +74,6 @@ public class DataTableServlet extends HttpServlet {
 						"	\"emptyTask\": \"false\"\n" + 
 						"}");
 			}
-			//out.println(taskDesc + " " + details + " " + dueTime);
-			//response.getWriter().write(addTask);
-			//response.sendRedirect("index.jsp");
 		}
 		else if (request.getParameter("type").equals("btnDeleteAll")) {
 		    tdl.deleteAllTasks();
@@ -94,6 +88,35 @@ public class DataTableServlet extends HttpServlet {
 		    out.println("{\n" + 
 					"	\"deleteTask\": \"success\"\n" + 
 					"}");
+		}
+		else if (request.getParameter("type").equals("btnEditTask")) {
+			String strId = request.getParameter("rowId").trim();
+			Integer id = Integer.parseInt(strId);
+			String taskDesc = request.getParameter("txbEditTaskDes").trim();
+			String details = request.getParameter("txtAreaEditDetails").trim();
+			String hour = request.getParameter("editHour");
+			String minute = request.getParameter("editMinute");
+			String amPm = request.getParameter("editAmPm");
+			String dueTime = hour + ":" + minute + " " + amPm;
+			String dueDate = request.getParameter("txbEditDueDate");
+			boolean validDate = tdl.isValidDate(dueDate);
+			if (validDate == true && !taskDesc.equals("")) {
+				String editTask = tdl.editTask(id, taskDesc, details, dueDate, dueTime);
+				System.out.println(tdl.showNotCompleted());
+				out.println(editTask);
+			}
+			else if (validDate == false) {
+				System.out.println("Invalid date.");
+				out.println("{\n" + 
+						"	\"validDate\": \"false\"\n" + 
+						"}");
+			}
+			else if (taskDesc.equals("")) {
+				System.out.println("Please enter a task description.");
+				out.println("{\n" + 
+						"	\"emptyTask\": \"false\"\n" + 
+						"}");
+			}
 		}
 		else {
 			System.out.println("Confused");

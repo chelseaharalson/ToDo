@@ -5,7 +5,7 @@ $(document).ready(function() {
         "rowId": "id",
         "bFilter": false,
         "bInfo": false,
-        "bLengthChange": false,
+        "bLengthChange": true,
         "bPaginate": false,
         "bSort": false,
         "columns": [
@@ -110,7 +110,7 @@ $(function() {
 
 function editTask(rowId) {
 	//alert(rowId);
-    var txbEditTaskDes = document.getElementById('txbEditTask');
+    var txbEditTaskDes = document.getElementById('txbEditTaskDes');
 	//var txbEditDetails = document.getElementById('txtAreaEditDetails');
 	var txbEditDueDate = document.getElementById('txbEditDueDate');
 	var ddEditHoursElement = document.getElementById("editHour");
@@ -149,27 +149,27 @@ function editTask(rowId) {
 $(function() {
 	$('#formEditTask').on('submit', function(event) {
 		event.preventDefault();
-	    var txbAddDes = document.getElementById("txbAddTaskDes").value;
-	    var txbAddDet = document.getElementById("txtAreaAddDetails").value;
-	    var txbDueD = document.getElementById("txbDueDate").value;
-	    var ddHoursElement = document.getElementById("addHour");
-	    var ddHoursVal = ddHoursElement.options[ddHoursElement.selectedIndex].value;
-	    var ddMinutesElement = document.getElementById("addMinute");
-	    var ddMinutesVal = ddMinutesElement.options[ddMinutesElement.selectedIndex].value;
-	    var ddAmPmElement = document.getElementById("addAmPm");
-	    var ddAmPmVal = ddAmPmElement.options[ddAmPmElement.selectedIndex].value;
+	    var txbEditDes = document.getElementById("txbEditTaskDes").value;
+	    var txbEditDet = document.getElementById("txtAreaEditDetails").value;
+	    var txbEditD = document.getElementById("txbEditDueDate").value;
+	    var ddEditHoursElement = document.getElementById("editHour");
+	    var ddEditHoursVal = ddEditHoursElement.options[ddEditHoursElement.selectedIndex].value;
+	    var ddEditMinutesElement = document.getElementById("editMinute");
+	    var ddEditMinutesVal = ddEditMinutesElement.options[ddEditMinutesElement.selectedIndex].value;
+	    var ddEditAmPmElement = document.getElementById("editAmPm");
+	    var ddEditAmPmVal = ddEditAmPmElement.options[ddEditAmPmElement.selectedIndex].value;
 	  	  $.ajax({
 	        url: 'displayData',
 	        type: 'post',
 	        method: 'post',
 	        data: { 
-	            'type': 'btnAddTask',
-	            'txbAddTaskDes': txbAddDes,
-	            'txtAreaAddDetails': txbAddDet,
-	            'txbDueDate': txbDueD,
-	            'addHour': ddHoursVal,
-	            'addMinute': ddMinutesVal,
-	            'addAmPm': ddAmPmVal
+	            'type': 'btnEditTask',
+	            'txbEditTaskDes': txbEditDes,
+	            'txtAreaEditDetails': txbEditDet,
+	            'txbEditDueDate': txbEditD,
+	            'editHour': ddEditHoursVal,
+	            'editMinute': ddEditMinutesVal,
+	            'editAmPm': ddEditAmPmVal
 	        },
 	        dataType: 'text',
 	        success: function(data) {
@@ -183,24 +183,7 @@ $(function() {
 	      	    		alert('Please enter a task description.');
 	      	    }
 	      	    else {
-	          	  	//$('#ncTable').DataTable().draw();
-	          	  	//console.log(jsonObj.taskDescr);
-	          	  	newRowId = jsonObj.id;
-	          	    var newRow = ncTable.rows.add([
-	          	    	{
-	          	    		'taskDescr': jsonObj.taskDescr,
-	          	    		'dueDate': jsonObj.dueDate,
-	          	    		'timeDue': jsonObj.timeDue
-	          	    	}
-	          	   ]).draw();
-	          	   var temp = document.getElementById("taskTable").tBodies[0].rows.length - 1;
-	          	   var lastRow = document.getElementById("taskTable").tBodies[0].rows[ temp ];
-	          	   lastRow.setAttribute('id', jsonObj.id);
-	          	    //$(newRow).attr('id', jsonObj.id);
-	          	   //console.log(jsonObj.id);
-	          	   //newRow.setAttribute('id', jsonObj.id);
-	          	   document.getElementById("formAddTask").reset();
-	          	   //$("#openNewTaskForm").hide();
+	          	  	alert("Edit successful");
 	      	    }
     	    }
     });
