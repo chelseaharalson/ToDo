@@ -83,7 +83,9 @@ public class DataTableServlet extends HttpServlet {
 		}
 		else if (request.getParameter("type").equals("btnDeleteAll")) {
 		    tdl.deleteAllTasks();
-		    out.println("");
+		    out.println("{\n" + 
+					"	\"deleteAll\": \"success\"\n" + 
+					"}");
 		}
 		else if (request.getParameter("action3") != null) {
 		    // Invoke action 3.

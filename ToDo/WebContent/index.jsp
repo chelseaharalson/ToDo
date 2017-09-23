@@ -32,10 +32,10 @@
                 "bPaginate": false,
                 "bSort": false,
                 "columns": [
-                	   {
-                 	 "data": null,
-                      defaultContent: ''
-                    },
+	                {
+	                  "data": null,
+	                   defaultContent: ''
+	                },
                     { "data": "taskDescr" },
                     { "data": "dueDate" },
                     { "data": "timeDue" },
@@ -57,10 +57,6 @@
                 ],
                 columnDefs: [ 
                 	{
-                		"bVisible": false,
-                		targets: "id"
-                	},
-                	{
                     orderable: false,
                     className: 'select-checkbox',
                     targets:   0
@@ -73,6 +69,7 @@
                 } );
         } );
         
+        var newRowId;
         $(function() {
             $('#formAddTask').on('submit', function(event) {
                 event.preventDefault();
@@ -112,13 +109,20 @@
                   	    else {
 	                  	  	//$('#ncTable').DataTable().draw();
 	                  	  	//console.log(jsonObj.taskDescr);
-	                  	    ncTable.rows.add([
+	                  	  	newRowId = jsonObj.id;
+	                  	    var newRow = ncTable.rows.add([
 	                  	    	{
 	                  	    		'taskDescr': jsonObj.taskDescr,
 	                  	    		'dueDate': jsonObj.dueDate,
 	                  	    		'timeDue': jsonObj.timeDue
 	                  	    	}
 	                  	   ]).draw();
+	                  	   var temp = document.getElementById("notCompletedList").tBodies[0].rows.length - 1;
+	                  	   var lastRow = document.getElementById("notCompletedList").tBodies[0].rows[ temp ];
+	                  	   lastRow.setAttribute('id', jsonObj.id);
+	                  	    //$(newRow).attr('id', jsonObj.id);
+	                  	   //console.log(jsonObj.id);
+	                  	   //newRow.setAttribute('id', jsonObj.id);
 	                  	   document.getElementById("formAddTask").reset();
 	                  	   //$("#openNewTaskForm").hide();
                   	    }
@@ -126,6 +130,10 @@
                 });
         });
         });
+        
+        $('#notCompletedList tbody').on( 'click', 'tr', function () {
+            alert( 'Row index: '+ncTable.row( this ).index() );
+        } );
         
         	function editTask (obj) {
        		var rowID = $(obj).attr('id');
@@ -155,7 +163,14 @@
 	                    },
 	                    dataType: 'text',
 	                    success: function(data) {
-	                    		$('#notCompletedList').DataTable().clear().draw();
+	                    		var jsonObj = JSON.parse(data);
+	                    		if (jsonObj.deleteAll == "success") {
+	                    			$('#notCompletedList').DataTable().clear().draw();
+	                    			alert("All tasks deleted succesfully.");
+	                    		}
+	                    		else {
+	                    			alert("Please try again.");
+	                    		}
 	                	    }
 	                });
 	        });
@@ -201,13 +216,21 @@
         <table id="tblButtons" cellspacing="0" width="100%">
             <tr>
               <td width="40%"><a href="#openNewTaskForm"><button class="btn btn-1 btn-1a icon-newitem"><span>New Item</span></button></a></td>
-              <td width="40%"><button class="btn btn-1 btn-1a icon-complete"><span>Complete All</span></button></td>
+              <td width="40%">
+              	  <form method="post" action="DataTableServlet" id="formCompleteAllTask">
+              		<button class="btn btn-1 btn-1a icon-complete"><span>Complete All</span></button>
+              	  </form>
+              </td>
               <td width="40%">
               	<form method="post" action="DataTableServlet" id="formDeleteAllTask">
               		<button class="btn btn-1 btn-1a icon-remove" id="btnDeleteAll"><span>Delete All</span></button>
               	</form>
               </td>
-              <td width="40%"><button class="btn btn-1 btn-1a icon-show"><span>Show All</span></button></td>
+              <td width="40%">
+              	  <form method="post" action="DataTableServlet" id="formShowAllTask">
+              		<button class="btn btn-1 btn-1a icon-show"><span>Show All</span></button>
+              	  </form>
+              </td>
             </tr>
         </table>
         <table id="notCompletedList" class="display notCompletedList" cellspacing="0" width="100%">
