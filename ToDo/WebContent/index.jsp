@@ -178,7 +178,7 @@
 	    <a class="close" href="#">X</a>
 	    <p class="title">Edit Task</p>
 	    <div class="content">
-	    <form method="post" action="formEditTask" onsubmit="" >
+	    <form method="post" action="formEditTask" id="formEditTask">
 	    <table width="100%">
                 <tr>
                    <td><h4>Task: </h4></td>
@@ -216,7 +216,7 @@
                  </tr>
             </table>
             <center>
-            	<button type="submit" class="btn btn-1 btn-1a icon-newitem" onclick="" >
+            	<button type="submit" class="btn btn-1 btn-1a icon-newitem" name="btnSubmitEditTask">
             		<span>Submit</span>
             	</button>
             </center>

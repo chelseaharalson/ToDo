@@ -144,9 +144,8 @@ function editTask(rowId) {
 	ddEditHoursElement.value = hour;
 	ddEditMinutesElement.value = min;
 	ddEditAmPmElement.value = amPm;
-}
+	var thisRow = document.getElementById("taskTable").tBodies[0].rows[rowId];
 	
-$(function() {
 	$('#formEditTask').on('submit', function(event) {
 		event.preventDefault();
 	    var txbEditDes = document.getElementById("txbEditTaskDes").value;
@@ -163,7 +162,8 @@ $(function() {
 	        type: 'post',
 	        method: 'post',
 	        data: { 
-	            'type': 'btnEditTask',
+	        		'rowId': thisRow.getAttribute('id'),
+	            'type': 'btnSubmitEditTask',
 	            'txbEditTaskDes': txbEditDes,
 	            'txtAreaEditDetails': txbEditDet,
 	            'txbEditDueDate': txbEditD,
@@ -188,7 +188,7 @@ $(function() {
     	    }
     });
 });
-});
+}
 	
 $(function() {
 	$('#formDeleteAllTask').on('submit', function(event) {

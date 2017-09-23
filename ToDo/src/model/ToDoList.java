@@ -63,6 +63,7 @@ public class ToDoList {
             }
         }
         String resultString = toDoObjToAjaxString(toDoList.get(pTaskID));
+        System.out.println(resultString);
         return resultString;
     }
     

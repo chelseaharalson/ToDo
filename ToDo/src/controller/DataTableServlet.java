@@ -89,7 +89,7 @@ public class DataTableServlet extends HttpServlet {
 					"	\"deleteTask\": \"success\"\n" + 
 					"}");
 		}
-		else if (request.getParameter("type").equals("btnEditTask")) {
+		else if (request.getParameter("type").equals("btnSubmitEditTask")) {
 			String strId = request.getParameter("rowId").trim();
 			Integer id = Integer.parseInt(strId);
 			String taskDesc = request.getParameter("txbEditTaskDes").trim();
