@@ -27,8 +27,7 @@ public class ToDoList {
         addTask("Complete all tasks", "", "09/25/2017", "4:00 PM");
         addTask("Show not completed list", "...", "09/25/2017", "4:00 PM");
         addTask("Show all list", "...", "09/25/2017", "4:00 PM");
-        addTask("Finish edit", "This will also get view details to work", "09/25/2017", "5:00 AM");
-        addTask("View details", "...", "09/25/2017", "4:00 PM");
+        addTask("Fix edit bug", "This will also get view details to work", "09/25/2017", "5:00 AM");
         addTask("Fix checkOverdue logic", "", "09/25/2017", "4:00 PM");
         addTask("If overdue, turn red", "...", "09/23/2017", "4:00 PM");
         addTask("JUNIT tests", "...", "09/23/2017", "1:00 PM");

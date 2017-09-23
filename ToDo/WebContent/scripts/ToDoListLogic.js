@@ -1,4 +1,6 @@
 var ncTable;
+var requestSent = false;
+var currentRowId;
 $(document).ready(function() {
     ncTable = $("#taskTable").DataTable( {
         "ajax": "displayData",
@@ -105,9 +107,9 @@ $(function() {
 });
 
 function editTask(rowId) {
-	//alert(rowId);
+	currentRowId = rowId;
+	console.log("editTask1: " + currentRowId);
     var txbEditTaskDes = document.getElementById('txbEditTaskDes');
-	//var txbEditDetails = document.getElementById('txtAreaEditDetails');
 	var txbEditDueDate = document.getElementById('txbEditDueDate');
 	var ddEditHoursElement = document.getElementById("editHour");
 	var ddEditHoursVal = ddEditHoursElement.options[ddEditHoursElement.selectedIndex].value;
@@ -115,18 +117,19 @@ function editTask(rowId) {
 	var ddEditMinutesVal = ddEditMinutesElement.options[ddEditMinutesElement.selectedIndex].value;
 	var ddEditAmPmElement = document.getElementById("editAmPm");
 	var ddEditAmPmVal = ddEditAmPmElement.options[ddEditAmPmElement.selectedIndex].value;
-	var ncCells = taskTable.rows.item(rowId+1).cells;
-	//alert(ncCells[1].innerHTML.trim());
+	var ncCells = taskTable.rows.item(currentRowId+1).cells;
 	txbEditTaskDes.value = ncCells[1].innerHTML.trim();
 	txbEditDueDate.value = ncCells[2].innerHTML.trim();
+	console.log("editTask2: " + currentRowId);
 	// Populate details textbox
 	$.ajax({
 	    type: "post",
+	    method: "post",
 	    url:"displayData",
 	    dataType: "text",
 	    data: {
 	      	'type': 'btnViewDetails',
-	    		'rowId': rowId
+	    		'rowId': currentRowId
 	    },
 	    success: function(data) {
 	        var jsonObj = JSON.parse(data);
@@ -134,7 +137,7 @@ function editTask(rowId) {
 	    	    $("#txtAreaEditDetails").val(jsonObj.details);
 	    }
 	});
-	//alert(ncCells[3].innerHTML.trim());
+	console.log("editTask3: " + currentRowId);
 	var timeArr = ncCells[3].innerHTML.trim().split(":");
 	var hour = timeArr[0];
 	var tempMin = timeArr[1].split(" ");
@@ -144,9 +147,6 @@ function editTask(rowId) {
 	ddEditHoursElement.value = hour;
 	ddEditMinutesElement.value = min;
 	ddEditAmPmElement.value = amPm;
-	
-	var thisRow = document.getElementById("taskTable").tBodies[0].rows[rowId];
-	console.log("thisRow: " + thisRow.getAttribute('id'));
 	
 	$('#formEditTask').on('submit', function(event) {
 		event.preventDefault();
@@ -159,6 +159,10 @@ function editTask(rowId) {
 	    var ddEditMinutesVal = ddEditMinutesElement.options[ddEditMinutesElement.selectedIndex].value;
 	    var ddEditAmPmElement = document.getElementById("editAmPm");
 	    var ddEditAmPmVal = ddEditAmPmElement.options[ddEditAmPmElement.selectedIndex].value;
+	    
+	    if (!requestSent) {
+	    	  requestSent = true;
+	    	  var thisRow = document.getElementById("taskTable").tBodies[0].rows[currentRowId];
 	  	  $.ajax({
 	        url: 'displayData',
 	        type: 'post',
@@ -175,9 +179,9 @@ function editTask(rowId) {
 	        },
 	        dataType: 'text',
 	        success: function(data) {
-	      	    console.log(data);
+	        	    requestSent = false;
+	      	    //console.log(data);
 	      	    var jsonObj = JSON.parse(data);
-	      	    console.log(jsonObj.validDate);
 	      	    if (jsonObj.validDate == "false") {
 	        		    alert('Invalid date. Please enter in mm/dd/yyyy format.');
 	        	    }
@@ -185,19 +189,19 @@ function editTask(rowId) {
 	      	    		alert('Please enter a task description.');
 	      	    }
 	      	    else if (jsonObj.successEdit == "true") {
-	      	    		console.log(rowId);
-	      	    		console.log(ncTable.row(rowId).column('#colDueTime').data());
-	      	    		ncCells[1].innerHTML = txbEditDes;
-	      	    		ncCells[2].innerHTML = txbEditD;
+	      	    	    var taskCells = taskTable.rows.item(currentRowId+1).cells;
+	      	    	    taskCells[1].innerHTML = txbEditDes;
+	      	    	  	taskCells[2].innerHTML = txbEditD;
 	      	    		var strTime = ddEditHoursVal + ":" + ddEditMinutesVal + " " + ddEditAmPmVal;
-	      	    		ncCells[3].innerHTML = strTime;
+	      	    		taskCells[3].innerHTML = strTime;
 	      	    		$('#taskTable').DataTable().draw();
 	      	    }
 	      	    else if (jsonObj.successEdit == "false") {
 	      	    		alert("Edit unsucessful. Data not found.");
 	      	    }
     	    }
-    });
+	  	});
+	    }
 });
 }
 	
@@ -255,6 +259,7 @@ function viewDetails(rowId) {
 	// Populate details textbox
 	$.ajax({
 	    type: "post",
+	    method: "post",
 	    url:"displayData",
 	    dataType: "text",
 	    data: {

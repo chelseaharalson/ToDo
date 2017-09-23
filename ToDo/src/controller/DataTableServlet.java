@@ -8,10 +8,6 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-import java.util.ArrayList;
-import model.ToDo;
 import model.ToDoList;
 
 /**
@@ -46,7 +42,7 @@ public class DataTableServlet extends HttpServlet {
 		//doGet(request, response);
 		//System.out.println("Received request");
 		//System.out.println(request.getParameter("type"));
-		System.out.println(request);
+		System.out.println(request.getParameterNames());
 		PrintWriter out = response.getWriter();
 		if (request.getParameter("type").equals("btnAddTask")) {
 			System.out.println(request.getParameter("txbAddTaskDes"));
