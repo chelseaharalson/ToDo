@@ -23,8 +23,8 @@ public class ToDoList {
         toDoList = new ArrayList<ToDo>();
         taskCount = 0;
         
-        addTask("This is my first task", "Details!!!!!!", "05/22/2017", "2:22pm");
-        addTask("This is my second task", "Details2!!!!!!", "05/22/2017", "2:22pm");
+        addTask("This is my first task", "Details!!!!!!", "05/22/2017", "2:22AM");
+        addTask("This is my second task", "Details2!!!!!!", "05/22/2017", "5:00PM");
     }
     
     public String addTask(String pTaskDescr, String pDetail, String pDueDate, String pTimeDue) {

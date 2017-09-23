@@ -42,12 +42,12 @@
                     {
                     	   "data": null,
                         className: "center",
-                        defaultContent: '<button id="btnDeleteTask" onClick=deleteTask($(this).closest(\'tr\').index()) style="border: none; background: none;"><img src="images/delete.png"></button>'
+                        defaultContent: '<center><button id="btnDeleteTask" onClick=deleteTask($(this).closest(\'tr\').index()) style="border: none; background: none;"><img src="images/delete.png"></button></center>'
                     },
                     {
                        "data": null,
                         className: "center",
-                        defaultContent: '<a href="#openEdit" id="btnEdit" onClick=editTask($(this).closest(\'tr\').index())><img src="images/edit.png"></a>'
+                        defaultContent: '<a href="#openEdit" id="btnEditTask" onClick=editTask($(this).closest(\'tr\').index())><img src="images/edit.png"></a>'
                     },
                     {
                        "data": null,
@@ -134,8 +134,8 @@
         	function editTask(rowId) {
         		//alert(rowId);
 	    	    var txbEditTaskDes = document.getElementById('txbEditTask');
-	    		var txbEditDetails = document.getElementById('txtAreaEditDetails');
-	    		var txbEditDueDate = document.getElementById('txbEditTask');
+	    		//var txbEditDetails = document.getElementById('txtAreaEditDetails');
+	    		var txbEditDueDate = document.getElementById('txbEditDueDate');
 	    		var ddEditHoursElement = document.getElementById("editHour");
 	        var ddEditHoursVal = ddEditHoursElement.options[ddEditHoursElement.selectedIndex].value;
 	        var ddEditMinutesElement = document.getElementById("editMinute");
@@ -145,58 +145,42 @@
 	        var ncCells = notCompletedList.rows.item(rowId+1).cells;
 	        //alert(ncCells[1].innerHTML.trim());
 	        txbEditTaskDes.value = ncCells[1].innerHTML.trim();
+	        txbEditDueDate.value = ncCells[2].innerHTML.trim();
+	        // Populate details textbox
+	        $.ajax({
+	            type: "GET",
+	            url:"displayData",
+	            dataType: "text",
+	            success: function(data) {
+	                var jsonObj = JSON.parse(data);
+	                //alert(data);
+	            	    $("#txtAreaEditDetails").val(data);
+	            }
+	         });
+	        //alert(ncCells[3].innerHTML.trim());
+	        var timeArr = ncCells[3].innerHTML.trim().split(":");
+	        var hour = timeArr[0];
+	        //alert(hour);
+	        //alert(timeArr[1]);
+	        amPmVal = timeArr[1];
+	        amPmVal2 = timeArr[1];
+	        var tempMin;
+	        var amPm;
+	        if (amPmVal[2] == "A") {
+	        		tempMin = amPmVal.split("A");
+	        		amPm = "AM";
+	        }
+	        else if (amPmVal[2] == "P") {
+	        		tempMin = amPmVal.split("P");
+	        		amPm = "PM";
+	        }
+	        min = tempMin[0];
+	        //alert(min);
+	        //alert(amPm);
+	        ddEditHoursElement.value = hour;
+	        ddEditMinutesElement.value = min;
+	        ddEditAmPmElement.value = amPm;
 	    	 }
-        	
-        	$(function() {
-	        	$('#formDeleteAllTask').on('submit', function(event) {
-	                event.preventDefault();
-	              	  $.ajax({
-	                    url: 'displayData',
-	                    type: 'post',
-	                    method: 'post',
-	                    data: {
-	                    	'type': 'btnDeleteAll'
-	                    },
-	                    dataType: 'text',
-	                    success: function(data) {
-	                    		var jsonObj = JSON.parse(data);
-	                    		if (jsonObj.deleteAll == "success") {
-	                    			$('#notCompletedList').DataTable().clear().draw();
-	                    			alert("All tasks deleted succesfully.");
-	                    		}
-	                    		else {
-	                    			alert("Please try again.");
-	                    		}
-	                	    }
-	                });
-	        });
-        	});
-        	
-        	function deleteTask(rowId) {
-        		console.log("deleteTask");
-           	var thisRow = document.getElementById("notCompletedList").tBodies[0].rows[rowId];
-           	$(thisRow).addClass('selected');
-        		$.ajax({
-                 url: 'displayData',
-                 type: 'post',
-                 method: 'post',
-                 data: {
-                 	'type': 'btnDeleteTask',
-                 	'rowId': thisRow.getAttribute('id')
-                 },
-                 dataType: 'text',
-                 success: function(data) {
-	            		var jsonObj = JSON.parse(data);
-	            		if (jsonObj.deleteTask == "success") {
-	            			$('#notCompletedList').DataTable().row(rowId).remove().draw();
-	            			alert("Deleted task succesfully.");
-	            		}
-	            		else {
-	            			alert("Please try again.");
-	            		}
-                 }    
-        		});
-        	}
         	
         	$(function() {
 	        	$('#formEditTask').on('submit', function(event) {
@@ -258,6 +242,56 @@
                 });
 	        });
         	});
+        	
+        	$(function() {
+	        	$('#formDeleteAllTask').on('submit', function(event) {
+	                event.preventDefault();
+	              	  $.ajax({
+	                    url: 'displayData',
+	                    type: 'post',
+	                    method: 'post',
+	                    data: {
+	                    	'type': 'btnDeleteAll'
+	                    },
+	                    dataType: 'text',
+	                    success: function(data) {
+	                    		var jsonObj = JSON.parse(data);
+	                    		if (jsonObj.deleteAll == "success") {
+	                    			$('#notCompletedList').DataTable().clear().draw();
+	                    			alert("All tasks deleted succesfully.");
+	                    		}
+	                    		else {
+	                    			alert("Please try again.");
+	                    		}
+	                	    }
+	                });
+	        });
+        	});
+        	
+        	function deleteTask(rowId) {
+           	var thisRow = document.getElementById("notCompletedList").tBodies[0].rows[rowId];
+           	$(thisRow).addClass('selected');
+        		$.ajax({
+                 url: 'displayData',
+                 type: 'post',
+                 method: 'post',
+                 data: {
+                 	'type': 'btnDeleteTask',
+                 	'rowId': thisRow.getAttribute('id')
+                 },
+                 dataType: 'text',
+                 success: function(data) {
+	            		var jsonObj = JSON.parse(data);
+	            		if (jsonObj.deleteTask == "success") {
+	            			$('#notCompletedList').DataTable().row(rowId).remove().draw();
+	            			alert("Deleted task succesfully.");
+	            		}
+	            		else {
+	            			alert("Please try again.");
+	            		}
+                 }    
+        		});
+        	}
         </script>
         <script type="text/javascript">
 	        $(function(){
@@ -370,8 +404,8 @@
                         <select id='addHour' name='addHour'></select> :
                         <select id='addMinute' name='addMinute'></select>
                         <select id='addAmPm' name='addAmPm'>
-                        		<option value='am'>AM</option>
-  							<option value='pm'>PM</option>
+                        		<option value='AM'>AM</option>
+  							<option value='PM'>PM</option>
                         </select>
                     </td>
                  </tr>
