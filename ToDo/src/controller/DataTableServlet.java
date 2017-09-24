@@ -32,8 +32,8 @@ public class DataTableServlet extends HttpServlet {
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		response.setContentType("text/plain");
-        String strTdl = tdl.showNotCompleted();
-        response.getWriter().print(strTdl);
+        String tdlResponse = tdl.showNotCompleted();	// Get datatable
+        response.getWriter().print(tdlResponse);
 	}
 
 	/**
@@ -41,11 +41,7 @@ public class DataTableServlet extends HttpServlet {
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		PrintWriter out = response.getWriter();
-		if (request.getParameter("type") == null) {
-			String tdlResponse = tdl.showNotCompleted();		// Show not completed list
-	        response.getWriter().print(tdlResponse);
-		}
-		else if (request.getParameter("type").equals("btnAddTask")) {		// Do if the button clicked is to add a new item
+		if (request.getParameter("type").equals("btnAddTask")) {		// Do if the button clicked is to add a new item
 			System.out.println(request.getParameter("txbAddTaskDes"));
 			String taskDesc = request.getParameter("txbAddTaskDes").trim();	// Get parameters of textboxes and dropdown lists
 			String details = request.getParameter("txtAreaAddDetails").trim();
@@ -79,7 +75,7 @@ public class DataTableServlet extends HttpServlet {
 					"	\"deleteAll\": \"success\"\n" + 
 					"}");
 		}
-		else if (request.getParameter("type").equals("btnDeleteTask")) {	// If the button clicked is to delete task, get row ID and then delete that specific one
+		else if (request.getParameter("type").equals("btnDeleteTask")) {	// If the button clicked is to delete a specific task, get row ID and then delete that specific one
 			String strId = request.getParameter("rowId").trim();
 			Integer id = Integer.parseInt(strId);
 		    tdl.deleteTask(id);
@@ -180,8 +176,8 @@ public class DataTableServlet extends HttpServlet {
 	    		String tdlResponse = tdl.showNotCompleted();
 	        response.getWriter().print(tdlResponse);
 		}
-		else {
-			System.out.println("Confused");
+		else {	// Case that should never happen
+			System.out.println("ERROR");
 		}
 		out.close();
 	}

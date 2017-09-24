@@ -46,7 +46,7 @@ $(document).ready(function() {
         order: [[ 1, 'asc' ]]
         } );
       
-    viewMode = 'nc';
+    viewMode = 'nc';		// Default mode on page load set to button "show not completed"
 	  $.ajax({
       url: 'displayData',
       type: 'post',
@@ -204,14 +204,14 @@ function editTask(rowId) {		// Editing a task
 	        dataType: 'text',
 	        success: function(data) {
 	      	    //console.log(data);
-	      	    var jsonObj = JSON.parse(data);		// Parse JSON string
+	      	    var jsonObj = JSON.parse(data);		// Parse JSON string from server
 	      	    if (jsonObj.validDate == "false") {
 	        		    alert('Invalid date. Please enter in mm/dd/yyyy format.');
 	        	    }
 	      	    else if (jsonObj.emptyTask == "false") {
 	      	    		alert('Please enter a task description.');
 	      	    }
-	      	    else if (jsonObj.successEdit == "true") {		// Populate textboxes and dropdown list with previously selected values
+	      	    else if (jsonObj.successEdit == "true") {		// Populate textboxes and dropdown list with previously selected values for that ID
 	      	    	    var taskCells = taskTable.rows.item(currentRowId+1).cells;
 	      	    	    taskCells[1].innerHTML = txbEditDes;
 	      	    	  	taskCells[2].innerHTML = txbEditDateDue;
@@ -224,6 +224,7 @@ function editTask(rowId) {		// Editing a task
 	      	    			$(taskTable.rows.item(currentRowId+1).closest('tr')).css('color', '#000000');
 	      	    		}
 	      	    		$('#taskTable').DataTable().draw();
+	      	    		alert("Edit was successful.");
 	      	    }
 	      	    else if (jsonObj.successEdit == "false") {
 	      	    		alert("Edit unsucessful. Data not found.");
@@ -319,7 +320,7 @@ $(function() {		// Completing a specific task
         	     }
         	  }
         	  
-        	  var jsonStr = "{\"checkedData\": [";		// JSON string of checked values
+        	  var jsonStr = "{\"checkedData\": [";		// JSON string of checked values to send to the server
         	  for (var j = 0; j < checkedList.length; j++) {
         		  //console.log(checkedList[j]);
         		  jsonStr += "{\"id\": \"" + checkedList[j][0] + "\", \"checked\": \"" + checkedList[j][1] + "\"}"; 
@@ -354,7 +355,7 @@ $(function() {		// Completing a specific task
         		        var temp = document.getElementById("taskTable").tBodies[0].rows.length-1;
                    	var lastRow = document.getElementById("taskTable").tBodies[0].rows[temp];
                    	lastRow.setAttribute('id', jsonObj.data[i].id);
-                   	if (jsonObj.data[i].isComplete == "true" && lastRow.getAttribute('class') == "even") {
+                   	if (jsonObj.data[i].isComplete == "true" && lastRow.getAttribute('class') == "even") {	// Set checkboxes for each row
                    		lastRow.setAttribute('class', 'even selected');
                    	}
                    	else if (jsonObj.data[i].isComplete == "true" && lastRow.getAttribute('class') == "odd") {
@@ -396,7 +397,7 @@ $(function() {		// Completing all tasks
         		        var temp = document.getElementById("taskTable").tBodies[0].rows.length-1;
                    	var lastRow = document.getElementById("taskTable").tBodies[0].rows[temp];
                    	lastRow.setAttribute('id', jsonObj.data[i].id);
-                   	if (jsonObj.data[i].isComplete == "true" && lastRow.getAttribute('class') == "even") {
+                   	if (jsonObj.data[i].isComplete == "true" && lastRow.getAttribute('class') == "even") {	// Set checkboxes for each row
                    		lastRow.setAttribute('class', 'even selected');
                    	}
                    	else if (jsonObj.data[i].isComplete == "true" && lastRow.getAttribute('class') == "odd") {
@@ -436,7 +437,7 @@ $(function() {
         		        var temp = document.getElementById("taskTable").tBodies[0].rows.length-1;
                    	var lastRow = document.getElementById("taskTable").tBodies[0].rows[temp];
                    	lastRow.setAttribute('id', jsonObj.data[i].id);
-                   	if (jsonObj.data[i].isComplete == "true" && lastRow.getAttribute('class') == "even") {
+                   	if (jsonObj.data[i].isComplete == "true" && lastRow.getAttribute('class') == "even") {	// Set checkboxes for each row
                    		lastRow.setAttribute('class', 'even selected');
                    	}
                    	else if (jsonObj.data[i].isComplete == "true" && lastRow.getAttribute('class') == "odd") {

@@ -61,8 +61,6 @@ public class ToDoList {
                 toDoList.get(i).dateDue = pDateDue;
                 toDoList.get(i).timeDue = pTimeDue;
                 toDoList.get(i).checkOverdue();	// Check to see if new time is overdue
-                System.out.println("######" + toDoList.get(i).detail + " index: " + i);
-                System.out.println("######" + toDoList.get(i).taskDescr + " index: " + i);
                 return true;
             }
         }
@@ -136,7 +134,7 @@ public class ToDoList {
         return resultString;
     }
     
-    // JSON string for client
+    // Convert a specific ToDo object to a JSON string
     public String toDoObjToAjaxString(ToDo td) {
 	    	String resultString = "";
     		resultString += "{\"id\":\"" + td.taskID + "\",\"taskDescr\":\"" + escapeQuotes(td.taskDescr) 
@@ -158,7 +156,6 @@ public class ToDoList {
     		for (int i = 0; i < toDoList.size(); i++) {
             if (toDoList.get(i).taskID == rowID) {
                 resultString = toDoList.get(i).detail;
-                System.out.println("getDetails index: " + i + " detail: " + resultString);
                 return resultString;
             }
         }
