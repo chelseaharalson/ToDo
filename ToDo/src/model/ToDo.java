@@ -35,28 +35,32 @@ public class ToDo {
         currentTime = LocalTime.now();
         isComplete = false;
         
-        checkOverdue(dueDate, timeDue);
+        checkOverdue();
     }
     
-    public void checkOverdue(String pDueDate, String pTimeDue) {
+    public void checkOverdue() {
         // Setting if the task is overdue based on date and time
 		try {
-			Date dueDateObj = new SimpleDateFormat("MM/dd/yyyy", Locale.ENGLISH).parse(pDueDate);
+			Date dueDateObj = new SimpleDateFormat("MM/dd/yyyy", Locale.ENGLISH).parse(dueDate);
 			LocalDate localDueDate = new java.sql.Date(dueDateObj.getTime()).toLocalDate();
-	        Date timeDueObj = new SimpleDateFormat("hh:mm a", Locale.ENGLISH).parse(pTimeDue);
+	        Date timeDueObj = new SimpleDateFormat("hh:mm a", Locale.ENGLISH).parse(timeDue);
 	        Instant instant = Instant.ofEpochMilli(timeDueObj.getTime());
 	        LocalTime localTimeDue = LocalDateTime.ofInstant(instant, ZoneId.systemDefault()).toLocalTime();
 	        /*System.out.println("currentDate: " + currentDate);
 	        System.out.println("currentTimeDue: " + currentTime);
 	        System.out.println("localDueDate: " + localDueDate);
 	        System.out.println("localTimeDue: " + localTimeDue);*/
-	        if (currentDate.isAfter(localDueDate) /*&& currentTime.isAfter(localTimeDue)*/) {
+	        if (currentDate.isEqual(localDueDate) && currentTime.isAfter(localTimeDue)) {
+	            isOverdue = true;
+	            System.out.println("Task is overdue");
+	        }
+	        else if (currentDate.isAfter(localDueDate)) {
 	            isOverdue = true;
 	            System.out.println("Task is overdue");
 	        }
 	        else {
-	            isOverdue = false;
-	            System.out.println("Task is NOT overdue");
+	        		isOverdue = false;
+	        		System.out.println("Task is NOT overdue");
 	        }
 		} catch (ParseException e) {
 			//e.printStackTrace();

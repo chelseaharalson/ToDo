@@ -2,13 +2,14 @@ package controller;
 
 import java.io.IOException;
 import java.io.PrintWriter;
-
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import model.ToDoList;
+import org.json.JSONObject;
+import org.json.JSONArray;
 
 /**
  * Servlet implementation class DataTableServlet
@@ -42,7 +43,6 @@ public class DataTableServlet extends HttpServlet {
 		//doGet(request, response);
 		//System.out.println("Received request");
 		//System.out.println(request.getParameter("type"));
-		System.out.println(request.getParameterNames());
 		PrintWriter out = response.getWriter();
 		if (request.getParameter("type").equals("btnAddTask")) {
 			System.out.println(request.getParameter("txbAddTaskDes"));
@@ -132,6 +132,26 @@ public class DataTableServlet extends HttpServlet {
 			out.println("{\n" + 
 					"	\"details\": \"" + resultString + "\"\n" + 
 					"}");
+		}
+		else if (request.getParameter("type").equals("btnComplete")) {
+			String dataStr = request.getParameter("dataStr");
+			JSONObject obj = new JSONObject(dataStr);
+		    JSONArray checkedData = obj.getJSONArray("checkedData");
+		    for (int i = 0; i < checkedData.length(); ++i) {
+		      JSONObject task = checkedData.getJSONObject(i);
+		      String strId = task.getString("id");
+		      Integer id = Integer.parseInt(strId);
+		      boolean completeStatus = Boolean.parseBoolean(task.getString("checked"));
+		      tdl.completeTask(id, completeStatus);
+		    }
+		    if (request.getParameter("viewMode").equals("showAll")) {
+		    		String strTdl = tdl.showAll();
+		        response.getWriter().print(strTdl);
+		    }
+		    else {
+		    		String strTdl = tdl.showNotCompleted();
+		        response.getWriter().print(strTdl);
+		    }
 		}
 		else {
 			System.out.println("Confused");

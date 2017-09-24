@@ -48,7 +48,6 @@ $(document).ready(function() {
         } );
 } );
 
-var newRowId;
 $(function() {
     $('#formAddTask').on('submit', function(event) {
         event.preventDefault();
@@ -86,9 +85,6 @@ $(function() {
           	    		alert('Please enter a task description.');
           	    }
           	    else {
-              	  	//$('#ncTable').DataTable().draw();
-              	  	//console.log(jsonObj.taskDescr);
-              	  	newRowId = jsonObj.id;
               	    var newRow = ncTable.rows.add([
               	    	{
               	    		'taskDescr': jsonObj.taskDescr,
@@ -108,7 +104,6 @@ $(function() {
 
 function editTask(rowId) {
 	currentRowId = rowId;
-	console.log("editTask1: " + currentRowId);
     var txbEditTaskDes = document.getElementById('txbEditTaskDes');
 	var txbEditDueDate = document.getElementById('txbEditDueDate');
 	var ddEditHoursElement = document.getElementById("editHour");
@@ -137,7 +132,6 @@ function editTask(rowId) {
 	    	    $("#txtAreaEditDetails").val(jsonObj.details);
 	    }
 	});
-	console.log("editTask3: " + currentRowId);
 	var timeArr = ncCells[3].innerHTML.trim().split(":");
 	var hour = timeArr[0];
 	var tempMin = timeArr[1].split(" ");
@@ -276,27 +270,57 @@ function viewDetails(rowId) {
 
 $(function() {
 	$('#formCompleteTask').on('submit', function(event) {
-        event.preventDefault();
-        var tableControl = document.getElementById('taskTable');
-        var arrayOfValues = [];
-         $('#btnComplete').click(function() {
-        	 	var checkedValues = $("input:checkbox:checked", "#taskTable").map(function() {
-        	        return $(this).val();
-        	    }).get();
-        	    alert(checkedValues.join(','));
-         });
-         
-      	  $.ajax({
-            url: 'displayData',
-            type: 'post',
-            method: 'post',
-            data: {
-            	'type': 'btnComplete'
-            },
-            dataType: 'text',
-            success: function(data) {
-
-        	    }
+        	  event.preventDefault();
+        	  var checkedList = [];
+        	  for (var i = 1; i < ncTable.rows().count()+1; i++) {
+        	     var thisRow = taskTable.rows.item(i);
+        	     var selected = thisRow.getAttribute('class');
+        	     if (selected == "even selected" || selected == "odd selected") {
+        	    	 	checkedList.push([thisRow.getAttribute('id'),true]);
+        	     }
+        	     else {
+        	    	 	checkedList.push([thisRow.getAttribute('id'),false]);
+        	     }
+        	  }
+        	  
+        	  var jsonStr = "{\"checkedData\": [";
+        	  for (var j = 0; j < checkedList.length; j++) {
+        		  console.log(checkedList[j]);
+        		  jsonStr += "{\"id\": \"" + checkedList[j][0] + "\", \"checked\": \"" + checkedList[j][1] + "\"}"; 
+        		  if (j+1 != checkedList.length) {
+        			  jsonStr += ",";
+        		  }
+        	  }
+        	  jsonStr += "]}";
+        	  console.log(jsonStr);
+        	  
+	  	  $.ajax({
+	        url: 'displayData',
+	        type: 'post',
+	        method: 'post',
+	        data: {
+	        	'type': 'btnComplete',
+	        	'dataStr': jsonStr,
+	        	'viewMode': 'c'
+	        },
+	        dataType: 'text',
+	        success: function(data) {
+	        		ncTable.clear().draw();
+	        		var jsonObj = JSON.parse(data);
+	        		for (var i = 0; i < jsonObj.data.length; i++) {
+        		        var newRow = ncTable.rows.add([
+              	    	{
+              	    		'taskDescr': jsonObj.data[i].taskDescr,
+              	    		'dueDate': jsonObj.data[i].dueDate,
+              	    		'timeDue': jsonObj.data[i].timeDue
+              	    	}
+              	    ]).draw();
+        		        var temp = document.getElementById("taskTable").tBodies[0].rows.length-1;
+                   	var lastRow = document.getElementById("taskTable").tBodies[0].rows[temp];
+                   	lastRow.setAttribute('id', jsonObj.data[i].id);
+	        		 }
+	        	     ncTable.columns.adjust().draw();
+	    	    }
         });
 });
 });

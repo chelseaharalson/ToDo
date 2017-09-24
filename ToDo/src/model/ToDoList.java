@@ -9,8 +9,6 @@ import java.util.Locale;
 import java.util.ArrayList;
 import java.util.Calendar;
 
-import com.google.gson.Gson;
-
 /**
  *
  * @author chelseametcalf
@@ -27,10 +25,8 @@ public class ToDoList {
         addTask("Complete all tasks", "", "09/25/2017", "4:00 PM");
         addTask("Show not completed list", "...", "09/25/2017", "4:00 PM");
         addTask("Show all list", "...", "09/25/2017", "4:00 PM");
-        addTask("Fix edit bug", "This will also get view details to work", "09/25/2017", "5:00 AM");
-        addTask("Fix checkOverdue logic", "", "09/25/2017", "4:00 PM");
         addTask("If overdue, turn red", "...", "09/23/2017", "4:00 PM");
-        addTask("JUNIT tests", "...", "09/23/2017", "1:00 PM");
+        addTask("JUNIT tests", "...", "09/23/2017", "7:00 PM");
     }
     
     public String addTask(String pTaskDescr, String pDetail, String pDueDate, String pTimeDue) {
@@ -64,10 +60,10 @@ public class ToDoList {
         return false;
     }
     
-    public void completeTask(Integer pTaskID) {
+    public void completeTask(Integer pTaskID, boolean completeStatus) {
         for (int i = 0; i < toDoList.size(); i++) {
             if (toDoList.get(i).taskID == pTaskID) {
-                toDoList.get(i).isComplete = true;
+                toDoList.get(i).isComplete = completeStatus;
                 return;
             }
         }
@@ -85,14 +81,29 @@ public class ToDoList {
     }
     
     // checkoverdue as iterating through list
-    public void showAll() {
-        // Return todo list as json
+    public String showAll() {
+	    	ArrayList<ToDo> allTaskList = new ArrayList<ToDo>();
+	        for (int i = 0; i < toDoList.size(); i++) {
+	        		toDoList.get(i).checkOverdue();
+	            allTaskList.add(toDoList.get(i));
+	        }
+	
+	        String resultString = "{\"data\":[";
+	        for (int i = 0; i < allTaskList.size(); i++) {
+	        		resultString += toDoObjToAjaxString(allTaskList.get(i));
+	        		if (i+1 < allTaskList.size()) {
+	        			resultString += ",";
+	        		}
+	        }
+	        resultString += "]}";
+	        System.out.println(resultString);
+        return resultString;
     }
     
     public String showNotCompleted() {
         ArrayList<ToDo> notCompletedList = new ArrayList<ToDo>();
         for (int i = 0; i < toDoList.size(); i++) {
-        		//checkOverdue(toDoList.get(i).dueDate, toDoList.get(i).timeDue);
+        		toDoList.get(i).checkOverdue();
             if (toDoList.get(i).isComplete == false) {
                 notCompletedList.add(toDoList.get(i));
             }
