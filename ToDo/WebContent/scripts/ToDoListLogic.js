@@ -221,6 +221,9 @@ function editTask(rowId) {		// Editing a task
 	      	    		if (jsonObj.overdue == "true") {		// If overdue, set color to red
 	      	    			$(taskTable.rows.item(currentRowId+1).closest('tr')).css('color', '#FF0000');
 	                 }
+	      	    		else {
+	      	    			$(taskTable.rows.item(currentRowId+1).closest('tr')).css('color', '#000000');
+	      	    		}
 	      	    		$('#taskTable').DataTable().draw();
 	      	    }
 	      	    else if (jsonObj.successEdit == "false") {
