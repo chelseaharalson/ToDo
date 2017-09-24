@@ -119,7 +119,7 @@ h1 span{
 	right:4px;
 }
 
-/*----------------------------------------------Textbox-------------------------------------*/
+/* Textbox */
  .textbox { 
     border: 1px solid #848484; 
     -webkit-border-radius: 30px; 
@@ -144,7 +144,7 @@ h1 span{
     padding-right:10px; 
   }
   
-/*----------------------------------------------Table Style -------------------------------------*/
+/* Table Style */
 td.tdfield
 {
     width:150px;
@@ -311,7 +311,6 @@ select {
     cursor:pointer;
 }
 
-/* Targetting Webkit browsers only. FF will show the dropdown arrow with so much padding. */
 @media screen and (-webkit-min-device-pixel-ratio:0) {
     select {padding-right:18px}
 }
@@ -339,8 +338,4 @@ label:before {
     position:absolute;
     pointer-events:none;
     display:block;
-}
-
-.warning {
-    background-color: #F99 !important;
 }

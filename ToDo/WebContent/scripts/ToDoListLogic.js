@@ -138,7 +138,6 @@ $(function() {		// Button is to add a new item
 
 function editTask(rowId) {		// Editing a task
 	currentRowId = rowId;		// Get current row ID
-	alert(currentRowId);
     var txbEditTaskDes = document.getElementById('txbEditTaskDes');		// Get parameters
 	var txbEditDateDue = document.getElementById('txbEditDateDue');
 	var ddlEditHoursElement = document.getElementById("ddlEditHour");
@@ -150,6 +149,7 @@ function editTask(rowId) {		// Editing a task
 	var ncCells = taskTable.rows.item(currentRowId+1).cells;
 	txbEditTaskDes.value = ncCells[1].innerHTML.trim();
 	txbEditDateDue.value = ncCells[2].innerHTML.trim();
+ 	var thisRow = document.getElementById("taskTable").tBodies[0].rows[currentRowId];
 	// Populate details textarea
 	$.ajax({
 	    type: "post",
@@ -158,7 +158,7 @@ function editTask(rowId) {		// Editing a task
 	    dataType: "text",
 	    data: {
 	      	'type': 'btnViewDetails',
-	    		'rowId': currentRowId
+	    		'rowId': thisRow.getAttribute('id')
 	    },
 	    success: function(data) {
 	        var jsonObj = JSON.parse(data);
@@ -179,7 +179,6 @@ function editTask(rowId) {		// Editing a task
 		event.preventDefault();
 	    var txbEditDes = document.getElementById("txbEditTaskDes").value;		// Get parameter values
 	    var txbEditDet = document.getElementById("txtAreaEditDetails").value;
-	    console.log("txb: " + txbEditDet);
 	    var txbEditDateDue = document.getElementById("txbEditDateDue").value;
 	    var ddlEditHoursElement = document.getElementById("ddlEditHour");
 	    var ddlEditHoursVal = ddlEditHoursElement.options[ddlEditHoursElement.selectedIndex].value;
@@ -285,6 +284,7 @@ $(thisRow).addClass('selected');
 }
 
 function viewDetails(rowId) {		// View details button
+	var thisRow = document.getElementById("taskTable").tBodies[0].rows[rowId];
 	// Populate details textbox
 	$.ajax({
 	    type: "post",
@@ -293,7 +293,7 @@ function viewDetails(rowId) {		// View details button
 	    dataType: "text",
 	    data: {
 	      	'type': 'btnViewDetails',
-	    		'rowId': rowId
+	    		'rowId': thisRow.getAttribute('id')
 	    },
 	    success: function(data) {
 	        var jsonObj = JSON.parse(data);
@@ -320,14 +320,14 @@ $(function() {		// Completing a specific task
         	  
         	  var jsonStr = "{\"checkedData\": [";		// JSON string of checked values
         	  for (var j = 0; j < checkedList.length; j++) {
-        		  console.log(checkedList[j]);
+        		  //console.log(checkedList[j]);
         		  jsonStr += "{\"id\": \"" + checkedList[j][0] + "\", \"checked\": \"" + checkedList[j][1] + "\"}"; 
         		  if (j+1 != checkedList.length) {
         			  jsonStr += ",";
         		  }
         	  }
         	  jsonStr += "]}";
-        	  console.log(jsonStr);
+        	  //console.log(jsonStr);
         	  
 	  	  $.ajax({
 	        url: 'displayData',
@@ -422,7 +422,7 @@ $(function() {
 	        },
 	        dataType: 'text',
 	        success: function(data) {
-	        		ncTable.clear().draw();
+	        		ncTable.clear();
 	        		var jsonObj = JSON.parse(data);
 	        		for (var i = 0; i < jsonObj.data.length; i++) {
         		        var newRow = ncTable.rows.add([
@@ -445,7 +445,7 @@ $(function() {
                    		$(lastRow.closest('tr')).css('color', '#FF0000');
                    	}
 	        		 }
-	        	     ncTable.columns.adjust().draw();
+	        	     ncTable.draw();
 	    	    }
         });
 });
@@ -465,7 +465,7 @@ $(function() {
 	        },
 	        dataType: 'text',
 	        success: function(data) {
-	        		ncTable.clear().draw();
+	        		ncTable.clear();
 	        		var jsonObj = JSON.parse(data);
 	        		for (var i = 0; i < jsonObj.data.length; i++) {
         		        var newRow = ncTable.rows.add([
