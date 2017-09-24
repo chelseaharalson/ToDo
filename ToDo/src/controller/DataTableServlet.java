@@ -24,14 +24,13 @@ public class DataTableServlet extends HttpServlet {
      * Default constructor. 
      */
     public DataTableServlet() {
-        // TODO Auto-generated constructor stub
+    	
     }
 
 	/**
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		//response.setContentType("application/json");
 		response.setContentType("text/plain");
         String strTdl = tdl.showNotCompleted();
         response.getWriter().print(strTdl);
@@ -41,49 +40,46 @@ public class DataTableServlet extends HttpServlet {
 	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		//doGet(request, response);
-		//System.out.println("Received request");
-		//System.out.println(request.getParameter("type"));
 		PrintWriter out = response.getWriter();
 		if (request.getParameter("type") == null) {
-			String strTdl = tdl.showNotCompleted();
-	        response.getWriter().print(strTdl);
+			String tdlResponse = tdl.showNotCompleted();		// Show not completed list
+	        response.getWriter().print(tdlResponse);
 		}
-		else if (request.getParameter("type").equals("btnAddTask")) {
+		else if (request.getParameter("type").equals("btnAddTask")) {		// Do if the button clicked is to add a new item
 			System.out.println(request.getParameter("txbAddTaskDes"));
-			String taskDesc = request.getParameter("txbAddTaskDes").trim();
+			String taskDesc = request.getParameter("txbAddTaskDes").trim();	// Get parameters of textboxes and dropdown lists
 			String details = request.getParameter("txtAreaAddDetails").trim();
-			String hour = request.getParameter("addHour");
-			String minute = request.getParameter("addMinute");
-			String amPm = request.getParameter("addAmPm");
-			String dueTime = hour + ":" + minute + " " + amPm;
-			String dueDate = request.getParameter("txbDueDate");
-			boolean validDate = tdl.isValidDate(dueDate);
-			if (validDate == true && !taskDesc.trim().equals("")) {
-				String addTask = tdl.addTask(taskDesc, details, dueDate, dueTime);
+			String hour = request.getParameter("ddlAddHour");
+			String minute = request.getParameter("ddlAddMinute");
+			String amPm = request.getParameter("ddlAddAmPm");
+			String timeDue = hour + ":" + minute + " " + amPm;	// Get time string
+			String dateDue = request.getParameter("txbDateDue");
+			boolean validDate = tdl.isValidDate(dateDue);
+			if (validDate == true && !taskDesc.trim().equals("")) {		// Check if valid date and if the task description is not empty
+				String addTask = tdl.addTask(taskDesc, details, dateDue, timeDue);
 				System.out.println(tdl.showNotCompleted());
-				out.println(addTask);
+				out.println(addTask);	// Send JSON string of task to client so row can be added to datatable
 			}
-			else if (validDate == false) {
-				System.out.println("Invalid date.");
+			else if (validDate == false) {	// If the date is invalid, send error message / alert back to client to enter a valid date
+				System.out.println("Invalid date.");		// Console logging
 				out.println("{\n" + 
 						"	\"validDate\": \"false\"\n" + 
 						"}");
 			}
-			else if (taskDesc.trim().equals("")) {
+			else if (taskDesc.trim().equals("")) {	// If the task description is empty, send error message / alert back to client to enter a task description
 				System.out.println("Please enter a task description.");
 				out.println("{\n" + 
 						"	\"emptyTask\": \"false\"\n" + 
 						"}");
 			}
 		}
-		else if (request.getParameter("type").equals("btnDeleteAll")) {
+		else if (request.getParameter("type").equals("btnDeleteAll")) {	// If the button clicked is the delete all button, delete all tasks from list
 		    tdl.deleteAllTasks();
 		    out.println("{\n" + 
 					"	\"deleteAll\": \"success\"\n" + 
 					"}");
 		}
-		else if (request.getParameter("type").equals("btnDeleteTask")) {
+		else if (request.getParameter("type").equals("btnDeleteTask")) {	// If the button clicked is to delete task, get row ID and then delete that specific one
 			String strId = request.getParameter("rowId").trim();
 			Integer id = Integer.parseInt(strId);
 		    tdl.deleteTask(id);
@@ -91,21 +87,22 @@ public class DataTableServlet extends HttpServlet {
 					"	\"deleteTask\": \"success\"\n" + 
 					"}");
 		}
-		else if (request.getParameter("type").equals("btnSubmitEditTask")) {
+		else if (request.getParameter("type").equals("btnSubmitEditTask")) {	// Submission of edit task
 			String strId = request.getParameter("rowId");
 			System.out.println("ID: " + strId);
 			Integer id = Integer.parseInt(strId);
-			String taskDesc = request.getParameter("txbEditTaskDes").trim();
+			String taskDesc = request.getParameter("txbEditTaskDes").trim();		// Get parameters from textboxes and dropdown lists
 			String details = request.getParameter("txtAreaEditDetails").trim();
-			String hour = request.getParameter("editHour");
-			String minute = request.getParameter("editMinute");
-			String amPm = request.getParameter("editAmPm");
+			System.out.println("@@@@DETAILS: " + details);
+			String hour = request.getParameter("ddlEditHour");
+			String minute = request.getParameter("ddlEditMinute");
+			String amPm = request.getParameter("ddlEditAmPm");
 			String dueTime = hour + ":" + minute + " " + amPm;
-			String dueDate = request.getParameter("txbEditDueDate");
+			String dueDate = request.getParameter("txbEditDateDue");
 			boolean validDate = tdl.isValidDate(dueDate);
 			if (validDate == true && !taskDesc.trim().equals("")) {
 				boolean editSuccess = tdl.editTask(id, taskDesc, details, dueDate, dueTime);
-				if (editSuccess == true) {
+				if (editSuccess == true) {	// If the edit was successful, check if the new time or date makes it overdue
 					ToDo t = tdl.getToDo(id);
 					boolean overdue = false;
 					if (t != null) {
@@ -136,7 +133,7 @@ public class DataTableServlet extends HttpServlet {
 						"}");
 			}
 		}
-		else if (request.getParameter("type").equals("btnViewDetails")) {
+		else if (request.getParameter("type").equals("btnViewDetails")) {		// If viewing details, get JSON string for client
 			String strId = request.getParameter("rowId");
 			Integer id = Integer.parseInt(strId);
 			String resultString = tdl.escapeQuotes(tdl.getDetails(id));
@@ -144,44 +141,44 @@ public class DataTableServlet extends HttpServlet {
 					"	\"details\": \"" + resultString + "\"\n" + 
 					"}");
 		}
-		else if (request.getParameter("type").equals("btnComplete")) {
+		else if (request.getParameter("type").equals("btnComplete")) {	// If completing tasks...
 			String dataStr = request.getParameter("dataStr");
 			JSONObject obj = new JSONObject(dataStr);
-		    JSONArray checkedData = obj.getJSONArray("checkedData");
-		    for (int i = 0; i < checkedData.length(); i++) {
+		    JSONArray checkedData = obj.getJSONArray("checkedData");		// Get JSON string and look at checked data
+		    for (int i = 0; i < checkedData.length(); i++) {				
 		      JSONObject task = checkedData.getJSONObject(i);
 		      String strId = task.getString("id");
 		      Integer id = Integer.parseInt(strId);
-		      boolean completeStatus = Boolean.parseBoolean(task.getString("checked"));
-		      tdl.completeTask(id, completeStatus);
+		      boolean completeStatus = Boolean.parseBoolean(task.getString("checked"));	// Find if task is complete or not
+		      tdl.completeTask(id, completeStatus);		// Mark task as complete or not complete
 		    }
-		    if (request.getParameter("viewMode").equals("showAll")) {
-		    		String strTdl = tdl.showAll();
-		        response.getWriter().print(strTdl);
+		    if (request.getParameter("viewMode").equals("showAll")) {		// If the view mode is "show all", then show the whole list including ones marked complete
+		    		String tdlResponse = tdl.showAll();
+		        response.getWriter().print(tdlResponse);
 		    }
-		    else {
-		    		String strTdl = tdl.showNotCompleted();
-		        response.getWriter().print(strTdl);
+		    else {	// Else show not completed tasks
+		    		String tdlResponse = tdl.showNotCompleted();
+		        response.getWriter().print(tdlResponse);
 		    }
 		}
-		else if (request.getParameter("type").equals("btnCompleteAll")) {
+		else if (request.getParameter("type").equals("btnCompleteAll")) {		// If button clicked is "complete all", then mark all tasks as complete
 			tdl.completeAllTasks();
-		    if (request.getParameter("viewMode").equals("showAll")) {
-		    		String strTdl = tdl.showAll();
-		        response.getWriter().print(strTdl);
+		    if (request.getParameter("viewMode").equals("showAll")) {		// View mode is "show all"
+		    		String tdlResponse = tdl.showAll();
+		        response.getWriter().print(tdlResponse);
 		    }
 		    else {
-		    		String strTdl = tdl.showNotCompleted();
-		        response.getWriter().print(strTdl);
+		    		String tdlResponse = tdl.showNotCompleted();	// View mode is to only show not completed tasks
+		        response.getWriter().print(tdlResponse);
 		    }
 		}
-		else if (request.getParameter("type").equals("btnShowAll")) {
-		    		String strTdl = tdl.showAll();
-		        response.getWriter().print(strTdl);
+		else if (request.getParameter("type").equals("btnShowAll")) {		// If button clicked is "show all", then show all tasks
+		    		String tdlResponse = tdl.showAll();
+		        response.getWriter().print(tdlResponse);
 		}
-		else if (request.getParameter("type").equals("btnShowNotCompleted")) {
-	    		String strTdl = tdl.showNotCompleted();
-	        response.getWriter().print(strTdl);
+		else if (request.getParameter("type").equals("btnShowNotCompleted")) {	// If button clicked is "show not completed", then show only non completed tasks
+	    		String tdlResponse = tdl.showNotCompleted();
+	        response.getWriter().print(tdlResponse);
 		}
 		else {
 			System.out.println("Confused");

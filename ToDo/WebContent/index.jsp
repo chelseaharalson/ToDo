@@ -26,8 +26,8 @@
 	            for (i=1;i<=12;i++){
 	              	selectHour += '<option val=' + i + '>' + i + '</option>';
 	            }
-	            $('#addHour').html(selectHour);
-	            $('#editHour').html(selectHour);
+	            $('#ddlAddHour').html(selectHour);
+	            $('#ddlEditHour').html(selectHour);
 	        });
         </script>
         <script type="text/javascript">
@@ -39,8 +39,8 @@
 	            for (i=10;i<=59;i++){
 	             	selectMin += '<option val=' + i + '>' + i + '</option>';
 	            }
-	            $('#addMinute').html(selectMin);
-	            $('#editMinute').html(selectMin);
+	            $('#ddlAddMinute').html(selectMin);
+	            $('#ddlEditMinute').html(selectMin);
 	        });
         </script>
         <title>To Do List</title>
@@ -90,7 +90,7 @@
                 		</form>
                 </th>
                 <th id="colTaskDes" style="width: 80%;">Task</th>
-                <th id="colDueDate" style="width: 1%;">Due</th>
+                <th id="colDateDue" style="width: 1%;">Due</th>
                 <th id="colTimeDue" style="width: 9%;">Time</th>
                 <th style="width: 1%;">Delete</th>
                 <th style="width: 1%;">Edit</th>
@@ -119,7 +119,7 @@
                     <td><h4>Due Date: </h4></td>
                     <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
                     <td>
-                        <input value="" type="text" id="txbDueDate" name="txbDueDate" maxlength="10" style="width: 140px;" placeholder='mm/dd/yyyy' />
+                        <input value="" type="text" id="txbDateDue" name="txbDateDue" maxlength="10" style="width: 140px;" placeholder='mm/dd/yyyy' />
                     </td>
                  </tr>
                 <tr>
@@ -136,9 +136,9 @@
                     <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
                     <td>
                         <!-- <input value="" type="text" id="txbTime" name="txbTime" maxlength="5" style="width: 140px;" placeholder='hh:mm'/> -->
-                        <select id='addHour' name='addHour'></select> :
-                        <select id='addMinute' name='addMinute'></select>
-                        <select id='addAmPm' name='addAmPm'>
+                        <select id='ddlAddHour' name='ddlAddHour'></select> :
+                        <select id='ddlAddMinute' name='ddlAddMinute'></select>
+                        <select id='ddlAddAmPm' name='ddlAddAmPm'>
                         		<option value='AM'>AM</option>
   							<option value='PM'>PM</option>
                         </select>
@@ -190,7 +190,7 @@
                     <td><h4>Due Date: </h4></td>
                     <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
                     <td>
-                        <input value="" type="text" id="txbEditDueDate" name="txbEditDueDate" maxlength="10" style="width: 140px;" placeholder='mm/dd/yyyy' />
+                        <input value="" type="text" id="txbEditDateDue" name="txbEditDateDue" maxlength="10" style="width: 140px;" placeholder='mm/dd/yyyy' />
                     </td>
                  </tr>
                 <tr>
@@ -206,9 +206,9 @@
                     <td><h4>Due Time: </h4></td>
                     <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
                     <td>
-                        <select id="editHour" name="editHour"></select> :
-                        <select id='editMinute' name="editMinute"></select>
-                        <select id='editAmPm' name="editAmPm">
+                        <select id="ddlEditHour" name="ddlEditHour"></select> :
+                        <select id='ddlEditMinute' name="ddlEditMinute"></select>
+                        <select id='ddlEditAmPm' name="ddlEditAmPm">
                         		<option value="AM">AM</option>
   							<option value="PM">PM</option>
                         </select>
