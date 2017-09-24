@@ -1,10 +1,8 @@
 var ncTable;
-var requestSent = false;
 var currentRowId;
 var viewMode = "nc";
 $(document).ready(function() {
     ncTable = $("#taskTable").DataTable( {
-        "ajax": "displayData",
         "rowId": "id",
         "bFilter": false,
         "bInfo": false,
@@ -47,8 +45,38 @@ $(document).ready(function() {
         },
         order: [[ 1, 'asc' ]]
         } );
-
-	    //document.getElementById("btnShowNotCompleted").click();
+      
+    viewMode = 'nc';
+	  $.ajax({
+      url: 'displayData',
+      type: 'post',
+      method: 'post',
+      data: {
+      	'type': 'btnShowNotCompleted',
+      	'viewMode': viewMode
+      },
+      dataType: 'text',
+      success: function(data) {
+      		ncTable.clear().draw();
+      		var jsonObj = JSON.parse(data);
+      		for (var i = 0; i < jsonObj.data.length; i++) {
+  		        var newRow = ncTable.rows.add([
+        	    	{
+        	    		'taskDescr': jsonObj.data[i].taskDescr,
+        	    		'dueDate': jsonObj.data[i].dueDate,
+        	    		'timeDue': jsonObj.data[i].timeDue
+        	    	}
+        	    ]).draw();
+  		        var temp = document.getElementById("taskTable").tBodies[0].rows.length-1;
+             	var lastRow = document.getElementById("taskTable").tBodies[0].rows[temp];
+             	lastRow.setAttribute('id', jsonObj.data[i].id);
+             	if (jsonObj.data[i].isOverdue == "true") {
+             		$(lastRow.closest('tr')).css('color', '#FF0000');
+             	}
+      		 }
+      	     ncTable.columns.adjust().draw();
+  	    }
+  });
 } );
 
 $(function() {
@@ -121,7 +149,6 @@ function editTask(rowId) {
 	var ncCells = taskTable.rows.item(currentRowId+1).cells;
 	txbEditTaskDes.value = ncCells[1].innerHTML.trim();
 	txbEditDueDate.value = ncCells[2].innerHTML.trim();
-	console.log("editTask2: " + currentRowId);
 	// Populate details textbox
 	$.ajax({
 	    type: "post",
@@ -160,8 +187,6 @@ function editTask(rowId) {
 	    var ddEditAmPmElement = document.getElementById("editAmPm");
 	    var ddEditAmPmVal = ddEditAmPmElement.options[ddEditAmPmElement.selectedIndex].value;
 	    
-	    if (!requestSent) {
-	    	  requestSent = true;
 	    	  var thisRow = document.getElementById("taskTable").tBodies[0].rows[currentRowId];
 	  	  $.ajax({
 	        url: 'displayData',
@@ -179,7 +204,6 @@ function editTask(rowId) {
 	        },
 	        dataType: 'text',
 	        success: function(data) {
-	        	    requestSent = false;
 	      	    //console.log(data);
 	      	    var jsonObj = JSON.parse(data);
 	      	    if (jsonObj.validDate == "false") {
@@ -204,7 +228,6 @@ function editTask(rowId) {
 	      	    }
     	    }
 	  	});
-	    }
 });
 }
 	
@@ -333,6 +356,9 @@ $(function() {
                    	else if (jsonObj.data[i].isComplete == "true" && lastRow.getAttribute('class') == "odd") {
                    		lastRow.setAttribute('class', 'odd selected');
                    	}
+                   	if (jsonObj.data[i].isOverdue == "true") {
+                 		$(lastRow.closest('tr')).css('color', '#FF0000');
+                 	}
 	        		 }
 	        	     ncTable.columns.adjust().draw();
 	    	    }

@@ -45,7 +45,11 @@ public class DataTableServlet extends HttpServlet {
 		//System.out.println("Received request");
 		//System.out.println(request.getParameter("type"));
 		PrintWriter out = response.getWriter();
-		if (request.getParameter("type").equals("btnAddTask")) {
+		if (request.getParameter("type") == null) {
+			String strTdl = tdl.showNotCompleted();
+	        response.getWriter().print(strTdl);
+		}
+		else if (request.getParameter("type").equals("btnAddTask")) {
 			System.out.println(request.getParameter("txbAddTaskDes"));
 			String taskDesc = request.getParameter("txbAddTaskDes").trim();
 			String details = request.getParameter("txtAreaAddDetails").trim();
