@@ -1,6 +1,7 @@
 var ncTable;
 var requestSent = false;
 var currentRowId;
+var viewMode = "nc";
 $(document).ready(function() {
     ncTable = $("#taskTable").DataTable( {
         "ajax": "displayData",
@@ -301,7 +302,108 @@ $(function() {
 	        data: {
 	        	'type': 'btnComplete',
 	        	'dataStr': jsonStr,
-	        	'viewMode': 'c'
+	        	'viewMode': viewMode
+	        },
+	        dataType: 'text',
+	        success: function(data) {
+	        		ncTable.clear().draw();
+	        		var jsonObj = JSON.parse(data);
+	        		for (var i = 0; i < jsonObj.data.length; i++) {
+        		        var newRow = ncTable.rows.add([
+              	    	{
+              	    		'taskDescr': jsonObj.data[i].taskDescr,
+              	    		'dueDate': jsonObj.data[i].dueDate,
+              	    		'timeDue': jsonObj.data[i].timeDue
+              	    	}
+              	    ]).draw();
+        		        var temp = document.getElementById("taskTable").tBodies[0].rows.length-1;
+                   	var lastRow = document.getElementById("taskTable").tBodies[0].rows[temp];
+                   	lastRow.setAttribute('id', jsonObj.data[i].id);
+	        		 }
+	        	     ncTable.columns.adjust().draw();
+	    	    }
+        });
+});
+});
+
+$(function() {
+	$('#formCompleteAllTask').on('submit', function(event) {
+        	  event.preventDefault();
+	  	  $.ajax({
+	        url: 'displayData',
+	        type: 'post',
+	        method: 'post',
+	        data: {
+	        	'type': 'btnCompleteAll',
+	        	'viewMode': viewMode
+	        },
+	        dataType: 'text',
+	        success: function(data) {
+	        		ncTable.clear().draw();
+	        		var jsonObj = JSON.parse(data);
+	        		for (var i = 0; i < jsonObj.data.length; i++) {
+        		        var newRow = ncTable.rows.add([
+              	    	{
+              	    		'taskDescr': jsonObj.data[i].taskDescr,
+              	    		'dueDate': jsonObj.data[i].dueDate,
+              	    		'timeDue': jsonObj.data[i].timeDue
+              	    	}
+              	    ]).draw();
+        		        var temp = document.getElementById("taskTable").tBodies[0].rows.length-1;
+                   	var lastRow = document.getElementById("taskTable").tBodies[0].rows[temp];
+                   	lastRow.setAttribute('id', jsonObj.data[i].id);
+	        		 }
+	        	     ncTable.columns.adjust().draw();
+	    	    }
+        });
+});
+});
+
+$(function() {
+	$('#formShowAllTask').on('submit', function(event) {
+        	  event.preventDefault();
+        	  viewMode = 'showAll';
+	  	  $.ajax({
+	        url: 'displayData',
+	        type: 'post',
+	        method: 'post',
+	        data: {
+	        	'type': 'btnShowAll',
+	        	'viewMode': viewMode
+	        },
+	        dataType: 'text',
+	        success: function(data) {
+	        		ncTable.clear().draw();
+	        		var jsonObj = JSON.parse(data);
+	        		for (var i = 0; i < jsonObj.data.length; i++) {
+        		        var newRow = ncTable.rows.add([
+              	    	{
+              	    		'taskDescr': jsonObj.data[i].taskDescr,
+              	    		'dueDate': jsonObj.data[i].dueDate,
+              	    		'timeDue': jsonObj.data[i].timeDue
+              	    	}
+              	    ]).draw();
+        		        var temp = document.getElementById("taskTable").tBodies[0].rows.length-1;
+                   	var lastRow = document.getElementById("taskTable").tBodies[0].rows[temp];
+                   	lastRow.setAttribute('id', jsonObj.data[i].id);
+	        		 }
+	        	     ncTable.columns.adjust().draw();
+	    	    }
+        });
+});
+});
+
+$(function() {
+	$('#formShowNotCompleted').on('submit', function(event) {
+        	  event.preventDefault();
+        	  viewMode = 'nc';
+	  	  $.ajax({
+	        url: 'displayData',
+	        type: 'post',
+	        method: 'post',
+	        data: {
+	        	'type': 'btnShowNotCompleted',
+	        	'viewMode': viewMode
 	        },
 	        dataType: 'text',
 	        success: function(data) {

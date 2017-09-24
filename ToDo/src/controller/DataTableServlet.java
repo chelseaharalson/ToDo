@@ -137,7 +137,7 @@ public class DataTableServlet extends HttpServlet {
 			String dataStr = request.getParameter("dataStr");
 			JSONObject obj = new JSONObject(dataStr);
 		    JSONArray checkedData = obj.getJSONArray("checkedData");
-		    for (int i = 0; i < checkedData.length(); ++i) {
+		    for (int i = 0; i < checkedData.length(); i++) {
 		      JSONObject task = checkedData.getJSONObject(i);
 		      String strId = task.getString("id");
 		      Integer id = Integer.parseInt(strId);
@@ -152,6 +152,25 @@ public class DataTableServlet extends HttpServlet {
 		    		String strTdl = tdl.showNotCompleted();
 		        response.getWriter().print(strTdl);
 		    }
+		}
+		else if (request.getParameter("type").equals("btnCompleteAll")) {
+			tdl.completeAllTasks();
+		    if (request.getParameter("viewMode").equals("showAll")) {
+		    		String strTdl = tdl.showAll();
+		        response.getWriter().print(strTdl);
+		    }
+		    else {
+		    		String strTdl = tdl.showNotCompleted();
+		        response.getWriter().print(strTdl);
+		    }
+		}
+		else if (request.getParameter("type").equals("btnShowAll")) {
+		    		String strTdl = tdl.showAll();
+		        response.getWriter().print(strTdl);
+		}
+		else if (request.getParameter("type").equals("btnShowNotCompleted")) {
+	    		String strTdl = tdl.showNotCompleted();
+	        response.getWriter().print(strTdl);
 		}
 		else {
 			System.out.println("Confused");

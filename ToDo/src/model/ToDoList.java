@@ -80,23 +80,22 @@ public class ToDoList {
         }
     }
     
-    // checkoverdue as iterating through list
     public String showAll() {
 	    	ArrayList<ToDo> allTaskList = new ArrayList<ToDo>();
-	        for (int i = 0; i < toDoList.size(); i++) {
-	        		toDoList.get(i).checkOverdue();
-	            allTaskList.add(toDoList.get(i));
-	        }
-	
-	        String resultString = "{\"data\":[";
-	        for (int i = 0; i < allTaskList.size(); i++) {
-	        		resultString += toDoObjToAjaxString(allTaskList.get(i));
-	        		if (i+1 < allTaskList.size()) {
-	        			resultString += ",";
-	        		}
-	        }
-	        resultString += "]}";
-	        System.out.println(resultString);
+        for (int i = 0; i < toDoList.size(); i++) {
+        		toDoList.get(i).checkOverdue();
+            allTaskList.add(toDoList.get(i));
+        }
+
+        String resultString = "{\"data\":[";
+        for (int i = 0; i < allTaskList.size(); i++) {
+        		resultString += toDoObjToAjaxString(allTaskList.get(i));
+        		if (i+1 < allTaskList.size()) {
+        			resultString += ",";
+        		}
+        }
+        resultString += "]}";
+        System.out.println(resultString);
         return resultString;
     }
     
