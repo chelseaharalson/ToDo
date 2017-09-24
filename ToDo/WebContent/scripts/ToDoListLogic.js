@@ -227,6 +227,7 @@ function editTask(rowId) {		// Editing a task
 	      	    }
 	      	    else if (jsonObj.successEdit == "false") {
 	      	    		alert("Edit unsucessful. Data not found.");
+	      	    		$('#taskTable').DataTable().row(currentRowId).remove().draw();
 	      	    }
 		    }
 	  	});

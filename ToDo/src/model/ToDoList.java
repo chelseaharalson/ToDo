@@ -15,12 +15,11 @@ public class ToDoList {
         toDoList = new ArrayList<ToDo>();
         taskCount = 0;
         
-        addTask("Complete tasks", "Get checked values and transfer to other table", "05/22/2017", "4:22 AM");
-        addTask("Complete all tasks", "", "09/25/2017", "4:00 PM");
-        addTask("Show not completed list", "...", "09/25/2017", "4:00 PM");
-        addTask("Show all list", "...", "09/25/2017", "4:00 PM");
-        addTask("If overdue, turn red", "...", "09/23/2017", "4:00 PM");
-        addTask("JUNIT tests", "...", "09/23/2017", "7:00 PM");
+        addTask("Math Homework 1", "Calculus problems 1-5", "05/22/2017", "4:22 AM");
+        addTask("Programming Assignment 1", "Credit card validation", "09/25/2017", "4:00 PM");
+        addTask("JUNIT tests", "", "09/25/2017", "6:00 AM");
+        addTask("Do laundry", "$4.00", "09/30/2017", "3:00 PM");
+        addTask("Get birthday present for brother", "Games", "04/24/2018", "9:00 AM");
     }
     
     // Return a specific ToDo object
@@ -183,5 +182,10 @@ public class ToDoList {
 			return false;
 		}
         
+    }
+    
+    // Returns to do list for JUNIT testing purposes
+    public ArrayList<ToDo> getToDoList() {
+    		return toDoList;
     }
 }
