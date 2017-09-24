@@ -319,6 +319,12 @@ $(function() {
         		        var temp = document.getElementById("taskTable").tBodies[0].rows.length-1;
                    	var lastRow = document.getElementById("taskTable").tBodies[0].rows[temp];
                    	lastRow.setAttribute('id', jsonObj.data[i].id);
+                   	if (jsonObj.data[i].isComplete == "true" && lastRow.getAttribute('class') == "even") {
+                   		lastRow.setAttribute('class', 'even selected');
+                   	}
+                   	else if (jsonObj.data[i].isComplete == "true" && lastRow.getAttribute('class') == "odd") {
+                   		lastRow.setAttribute('class', 'odd selected');
+                   	}
 	        		 }
 	        	     ncTable.columns.adjust().draw();
 	    	    }
@@ -352,6 +358,12 @@ $(function() {
         		        var temp = document.getElementById("taskTable").tBodies[0].rows.length-1;
                    	var lastRow = document.getElementById("taskTable").tBodies[0].rows[temp];
                    	lastRow.setAttribute('id', jsonObj.data[i].id);
+                   	if (jsonObj.data[i].isComplete == "true" && lastRow.getAttribute('class') == "even") {
+                   		lastRow.setAttribute('class', 'even selected');
+                   	}
+                   	else if (jsonObj.data[i].isComplete == "true" && lastRow.getAttribute('class') == "odd") {
+                   		lastRow.setAttribute('class', 'odd selected');
+                   	}
 	        		 }
 	        	     ncTable.columns.adjust().draw();
 	    	    }
@@ -386,6 +398,12 @@ $(function() {
         		        var temp = document.getElementById("taskTable").tBodies[0].rows.length-1;
                    	var lastRow = document.getElementById("taskTable").tBodies[0].rows[temp];
                    	lastRow.setAttribute('id', jsonObj.data[i].id);
+                   	if (jsonObj.data[i].isComplete == "true" && lastRow.getAttribute('class') == "even") {
+                   		lastRow.setAttribute('class', 'even selected');
+                   	}
+                   	else if (jsonObj.data[i].isComplete == "true" && lastRow.getAttribute('class') == "odd") {
+                   		lastRow.setAttribute('class', 'odd selected');
+                   	}
 	        		 }
 	        	     ncTable.columns.adjust().draw();
 	    	    }
