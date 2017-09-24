@@ -340,3 +340,7 @@ label:before {
     pointer-events:none;
     display:block;
 }
+
+.warning {
+    background-color: #F99 !important;
+}

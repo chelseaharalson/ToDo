@@ -47,6 +47,8 @@ $(document).ready(function() {
         },
         order: [[ 1, 'asc' ]]
         } );
+
+	    //document.getElementById("btnShowNotCompleted").click();
 } );
 
 $(function() {
@@ -78,7 +80,6 @@ $(function() {
             success: function(data) {
           	    console.log(data);
           	    var jsonObj = JSON.parse(data);
-          	    console.log(jsonObj.validDate);
           	    if (jsonObj.validDate == "false") {
             		    alert('Invalid date. Please enter in mm/dd/yyyy format.');
             	    }
@@ -96,6 +97,10 @@ $(function() {
               	   var temp = document.getElementById("taskTable").tBodies[0].rows.length-1;
               	   var lastRow = document.getElementById("taskTable").tBodies[0].rows[temp];
               	   lastRow.setAttribute('id', jsonObj.id);
+              	   if (jsonObj.isOverdue == "true") {
+              		   $(lastRow.closest('tr')).css('color', '#FF0000');
+                	   }
+              	   newRow.draw();
               	   document.getElementById("formAddTask").reset();
           	    }
         	    }
@@ -189,6 +194,9 @@ function editTask(rowId) {
 	      	    	  	taskCells[2].innerHTML = txbEditD;
 	      	    		var strTime = ddEditHoursVal + ":" + ddEditMinutesVal + " " + ddEditAmPmVal;
 	      	    		taskCells[3].innerHTML = strTime;
+	      	    		if (jsonObj.overdue == "true") {
+	      	    			$(taskTable.rows.item(currentRowId+1).closest('tr')).css('color', '#FF0000');
+	                 }
 	      	    		$('#taskTable').DataTable().draw();
 	      	    }
 	      	    else if (jsonObj.successEdit == "false") {
@@ -404,6 +412,9 @@ $(function() {
                    	else if (jsonObj.data[i].isComplete == "true" && lastRow.getAttribute('class') == "odd") {
                    		lastRow.setAttribute('class', 'odd selected');
                    	}
+                   	if (jsonObj.data[i].isOverdue == "true" && jsonObj.data[i].isComplete == "false") {
+                   		$(lastRow.closest('tr')).css('color', '#FF0000');
+                   	}
 	        		 }
 	        	     ncTable.columns.adjust().draw();
 	    	    }
@@ -438,6 +449,9 @@ $(function() {
         		        var temp = document.getElementById("taskTable").tBodies[0].rows.length-1;
                    	var lastRow = document.getElementById("taskTable").tBodies[0].rows[temp];
                    	lastRow.setAttribute('id', jsonObj.data[i].id);
+                   	if (jsonObj.data[i].isOverdue == "true") {
+                   		$(lastRow.closest('tr')).css('color', '#FF0000');
+                   	}
 	        		 }
 	        	     ncTable.columns.adjust().draw();
 	    	    }

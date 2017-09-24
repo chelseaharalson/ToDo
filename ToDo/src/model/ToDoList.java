@@ -29,6 +29,15 @@ public class ToDoList {
         addTask("JUNIT tests", "...", "09/23/2017", "7:00 PM");
     }
     
+    public ToDo getToDo(Integer pTaskID) {
+    	   for (int i = 0; i < toDoList.size(); i++) {     // Removing a specific task
+            if (toDoList.get(i).taskID == pTaskID) {
+                return toDoList.get(i);
+            }
+        }
+    	   return null;
+    }
+    
     public String addTask(String pTaskDescr, String pDetail, String pDueDate, String pTimeDue) {
         Integer pTaskID = taskCount;
         taskCount++;        // Increment taskID so each new task has a unique ID
@@ -54,6 +63,7 @@ public class ToDoList {
                 toDoList.get(i).detail = pDetail;
                 toDoList.get(i).dueDate = pDueDate;
                 toDoList.get(i).timeDue = pTimeDue;
+                toDoList.get(i).checkOverdue();
                 return true;
             }
         }

@@ -7,6 +7,7 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import model.ToDo;
 import model.ToDoList;
 import org.json.JSONObject;
 import org.json.JSONArray;
@@ -101,9 +102,15 @@ public class DataTableServlet extends HttpServlet {
 			if (validDate == true && !taskDesc.trim().equals("")) {
 				boolean editSuccess = tdl.editTask(id, taskDesc, details, dueDate, dueTime);
 				if (editSuccess == true) {
+					ToDo t = tdl.getToDo(id);
+					boolean overdue = false;
+					if (t != null) {
+						overdue = t.isOverdue;
+					}
 					System.out.println(tdl.showNotCompleted());
 					out.println("{\n" + 
-							"	\"successEdit\": \"true\"\n" + 
+							"	\"successEdit\": \"true\"," + 
+							"	\"overdue\": \"" + overdue + "\"" +
 							"}");
 				}
 				else {
