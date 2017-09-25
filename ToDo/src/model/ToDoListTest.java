@@ -151,6 +151,35 @@ public class ToDoListTest {
 		assertEquals(tdl.getToDo(id).dateDue, "02/19/2018");
 		assertEquals(tdl.getToDo(id).timeDue, "1:00 PM");
 	}
+	
+	@Test
+	public void testEditTask2() {
+		ToDoList tdl = new ToDoList();
+		tdl.addTask("Task1", "Detail1", "02/19/2018", "3:33 AM");
+		ArrayList<ToDo> tList = tdl.getToDoList();
+		tdl.addTask("Task2", "Detail2", "01/29/2017", "2:00 PM");
+		Integer id = tList.get(tList.size()-1).taskID;
+		tdl.editTask(id, "EditTask2", "EditTask2Detail", "02/19/2018", "2:00 PM");
+		assertEquals(tdl.getToDo(id).taskDescr, "EditTask2");
+		assertEquals(tdl.getToDo(id).detail, "EditTask2Detail");
+		assertEquals(tdl.getToDo(id).dateDue, "02/19/2018");
+		assertEquals(tdl.getToDo(id).timeDue, "2:00 PM");
+	}
+	
+	@Test
+	public void testEditTask3() {
+		ToDoList tdl = new ToDoList();
+		tdl.addTask("Task1", "Detail1", "02/19/2018", "3:33 AM");
+		ArrayList<ToDo> tList = tdl.getToDoList();
+		tdl.addTask("Task2", "Detail2", "01/29/2017", "2:00 PM");
+		Integer id = tList.get(tList.size()-1).taskID;
+		tdl.addTask("Task3", "Detail3", "12/11/2020", "4:22 PM");
+		tdl.editTask(id, "EditTask2", "EditTask2Detail", "02/19/2018", "2:00 PM");
+		assertEquals(tdl.getToDo(id).taskDescr, "EditTask2");
+		assertEquals(tdl.getToDo(id).detail, "EditTask2Detail");
+		assertEquals(tdl.getToDo(id).dateDue, "02/19/2018");
+		assertEquals(tdl.getToDo(id).timeDue, "2:00 PM");
+	}
 
 	@Test
 	public void testCompleteTask1() {
@@ -161,6 +190,32 @@ public class ToDoListTest {
 		tdl.addTask("Task2", "Detail2", "01/29/2017", "2:00 PM");
 		tdl.completeTask(id, false);
 		assertEquals(tdl.getToDo(id).isComplete, false);
+		tdl.completeTask(id, true);
+		assertEquals(tdl.getToDo(id).isComplete, true);
+	}
+	
+	@Test
+	public void testCompleteTask2() {
+		ToDoList tdl = new ToDoList();
+		tdl.addTask("Task1", "Detail1", "02/19/2018", "3:33 AM");
+		ArrayList<ToDo> tList = tdl.getToDoList();
+		Integer id = tList.get(tList.size()-1).taskID;
+		tdl.addTask("Task2", "Detail2", "01/29/2017", "2:00 PM");
+		tdl.completeTask(id, false);
+		assertEquals(tdl.getToDo(id).isComplete, false);
+		tdl.completeTask(id, false);
+		assertEquals(tdl.getToDo(id).isComplete, false);
+	}
+	
+	@Test
+	public void testCompleteTask3() {
+		ToDoList tdl = new ToDoList();
+		tdl.addTask("Task1", "Detail1", "02/19/2018", "3:33 AM");
+		ArrayList<ToDo> tList = tdl.getToDoList();
+		Integer id = tList.get(tList.size()-1).taskID;
+		tdl.addTask("Task2", "Detail2", "01/29/2017", "2:00 PM");
+		tdl.completeTask(id, true);
+		assertEquals(tdl.getToDo(id).isComplete, true);
 		tdl.completeTask(id, true);
 		assertEquals(tdl.getToDo(id).isComplete, true);
 	}
@@ -213,7 +268,6 @@ public class ToDoListTest {
 		Integer id2 = tList.get(tList.size()-1).taskID;
 		tdl.completeTask(id1, true);
 		tdl.completeTask(id2, true);
-		//System.out.println("Show not complete: " + tdl.showNotCompleted());
 		String nc = tdl.showNotCompleted();
 		assertEquals("{\"data\":[{\"id\":\"0\",\"taskDescr\":\"Math Homework 1\",\"detail\":\"Calculus problems 1-5\",\"dateDue\":\"05/22/2017\",\"timeDue\":\"4:22 AM\",\"isComplete\":\"false\",\"isOverdue\":\"true\"},{\"id\":\"1\",\"taskDescr\":\"Programming Assignment 1\",\"detail\":\"Credit card validation\",\"dateDue\":\"09/25/2017\",\"timeDue\":\"4:00 PM\",\"isComplete\":\"false\",\"isOverdue\":\"false\"},{\"id\":\"2\",\"taskDescr\":\"JUNIT tests\",\"detail\":\"\",\"dateDue\":\"09/25/2017\",\"timeDue\":\"6:00 AM\",\"isComplete\":\"false\",\"isOverdue\":\"false\"},{\"id\":\"3\",\"taskDescr\":\"Do laundry\",\"detail\":\"$4.00\",\"dateDue\":\"09/30/2017\",\"timeDue\":\"3:00 PM\",\"isComplete\":\"false\",\"isOverdue\":\"false\"},{\"id\":\"4\",\"taskDescr\":\"Get birthday present for brother\",\"detail\":\"Games\",\"dateDue\":\"04/24/2018\",\"timeDue\":\"9:00 AM\",\"isComplete\":\"false\",\"isOverdue\":\"false\"}]}", nc);
 	}
@@ -230,6 +284,42 @@ public class ToDoListTest {
 		String detail2 = tdl.getDetails(id2);
 		assertEquals("Detail1", detail1);
 		assertEquals("Detail2", detail2);
+	}
+	
+	@Test
+	public void checkOverdue1() {
+		ToDoList tdl = new ToDoList();
+		tdl.addTask("Task1", "Detail1", "02/19/2018", "3:33 AM");
+		ArrayList<ToDo> tList = tdl.getToDoList();
+		ToDo lastToDo = tList.get(tList.size()-1);
+		assertEquals(lastToDo.isOverdue, false);
+	}
+	
+	@Test
+	public void checkOverdue2() {
+		ToDoList tdl = new ToDoList();
+		tdl.addTask("Task1", "Detail1", "10/19/2015", "1:33 PM");
+		ArrayList<ToDo> tList = tdl.getToDoList();
+		ToDo lastToDo = tList.get(tList.size()-1);
+		assertEquals(lastToDo.isOverdue, true);
+	}
+	
+	@Test
+	public void checkOverdue3() {
+		ToDoList tdl = new ToDoList();
+		tdl.addTask("Task1", "Detail1", "09/24/2017", "1:33 PM");
+		ArrayList<ToDo> tList = tdl.getToDoList();
+		ToDo lastToDo = tList.get(tList.size()-1);
+		assertEquals(lastToDo.isOverdue, true);
+	}
+	
+	@Test
+	public void checkOverdue4() {
+		ToDoList tdl = new ToDoList();
+		tdl.addTask("Task1", "Detail1", "09/24/2019", "9:33 PM");
+		ArrayList<ToDo> tList = tdl.getToDoList();
+		ToDo lastToDo = tList.get(tList.size()-1);
+		assertEquals(lastToDo.isOverdue, false);
 	}
 
 }

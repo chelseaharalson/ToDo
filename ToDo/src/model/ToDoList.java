@@ -15,11 +15,12 @@ public class ToDoList {
         toDoList = new ArrayList<ToDo>();
         taskCount = 0;
         
-        addTask("Math Homework 1", "Calculus problems 1-5", "05/22/2017", "4:22 AM");
-        addTask("Programming Assignment 1", "Credit card validation", "09/25/2017", "4:00 PM");
-        addTask("JUNIT tests", "", "09/25/2017", "6:00 AM");
+        addTask("Math Homework 1", "Calculus problems 1-52", "05/22/2017", "2:22 PM");
+        addTask("Study for bioinformatics quiz", "Chapter 2", "10/25/2017", "6:00 AM");
+        addTask("Programming Assignment 1", "Java", "09/20/2017", "4:30 PM");
         addTask("Do laundry", "$4.00", "09/30/2017", "3:00 PM");
         addTask("Get birthday present for brother", "Games", "04/24/2018", "9:00 AM");
+        addTask("Buy plane ticket", "$$$", "12/20/2017", "1:00 AM");
     }
     
     // Return a specific ToDo object
@@ -36,8 +37,8 @@ public class ToDoList {
     public String addTask(String pTaskDescr, String pDetail, String pDateDue, String pTimeDue) {
         Integer pTaskID = taskCount;
         taskCount++;        // Increment taskID so each new task has a unique ID
-        System.out.println("Adding new task: " + pTaskDescr);
         toDoList.add(new ToDo(pTaskID, pTaskDescr, pDetail, pDateDue, pTimeDue));
+        //System.out.println("Added new task: " + pTaskDescr);
         String resultString = toDoObjToAjaxString(toDoList.get(toDoList.size()-1));
         return resultString;
     }
@@ -46,6 +47,7 @@ public class ToDoList {
     public void deleteTask(Integer pTaskID) {
         for (int i = 0; i < toDoList.size(); i++) {
             if (toDoList.get(i).taskID == pTaskID) {
+            		//System.out.println("Deleted task: " + toDoList.get(i).taskDescr);
                 toDoList.remove(i);
                 return;
             }
@@ -61,6 +63,7 @@ public class ToDoList {
                 toDoList.get(i).dateDue = pDateDue;
                 toDoList.get(i).timeDue = pTimeDue;
                 toDoList.get(i).checkOverdue();	// Check to see if new time is overdue
+                //System.out.println("Edited task: " + toDoList.get(i).taskDescr);
                 return true;
             }
         }
@@ -72,6 +75,7 @@ public class ToDoList {
         for (int i = 0; i < toDoList.size(); i++) {
             if (toDoList.get(i).taskID == pTaskID) {
                 toDoList.get(i).isComplete = completeStatus;
+                //System.out.println("Marked task: " + toDoList.get(i).taskDescr + " as complete: " + completeStatus);
                 return;
             }
         }
@@ -81,6 +85,7 @@ public class ToDoList {
     public void deleteAllTasks() {
         toDoList.clear();
         taskCount = 0;
+        //System.out.println("Deleted all tasks.");
     }
     
     // Mark all tasks as completed
@@ -88,6 +93,7 @@ public class ToDoList {
         for (int i = 0; i < toDoList.size(); i++) {
             toDoList.get(i).isComplete = true;
         }
+        //System.out.println("Completed all tasks.");
     }
     
     // Show all tasks, even completed ones
@@ -107,7 +113,8 @@ public class ToDoList {
         		}
         }
         resultString += "]}";
-        System.out.println(resultString);
+        //System.out.println(resultString);
+        //System.out.println("Showing all tasks.");
         return resultString;
     }
     
@@ -130,7 +137,8 @@ public class ToDoList {
         		}
         }
         resultString += "]}";
-        System.out.println(resultString);
+        //System.out.println(resultString);
+        //System.out.println("Showing not completed tasks.");
         return resultString;
     }
     
@@ -156,6 +164,7 @@ public class ToDoList {
     		for (int i = 0; i < toDoList.size(); i++) {
             if (toDoList.get(i).taskID == rowID) {
                 resultString = toDoList.get(i).detail;
+                //System.out.println("Retrieving detail: " + toDoList.get(i).detail);
                 return resultString;
             }
         }

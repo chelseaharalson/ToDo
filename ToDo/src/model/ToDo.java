@@ -51,15 +51,15 @@ public class ToDo {
 	        System.out.println("localTimeDue: " + localTimeDue);*/
 	        if (currentDate.isEqual(localDateDue) && currentTime.isAfter(localTimeDue)) {
 	            isOverdue = true;
-	            System.out.println("Task is overdue");
+	            //System.out.println("Task is overdue");
 	        }
 	        else if (currentDate.isAfter(localDateDue)) {
 	            isOverdue = true;
-	            System.out.println("Task is overdue");
+	            //System.out.println("Task is overdue");
 	        }
 	        else {
 	        		isOverdue = false;
-	        		System.out.println("Task is NOT overdue");
+	        		//System.out.println("Task is NOT overdue");
 	        }
 		} catch (ParseException e) {
 			//e.printStackTrace();

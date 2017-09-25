@@ -42,7 +42,6 @@ public class DataTableServlet extends HttpServlet {
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		PrintWriter out = response.getWriter();
 		if (request.getParameter("type").equals("btnAddTask")) {		// Do if the button clicked is to add a new item
-			System.out.println(request.getParameter("txbAddTaskDes"));
 			String taskDesc = request.getParameter("txbAddTaskDes").trim();	// Get parameters of textboxes and dropdown lists
 			String details = request.getParameter("txtAreaAddDetails").trim();
 			String hour = request.getParameter("ddlAddHour");
@@ -53,7 +52,7 @@ public class DataTableServlet extends HttpServlet {
 			boolean validDate = tdl.isValidDate(dateDue);
 			if (validDate == true && !taskDesc.trim().equals("")) {		// Check if valid date and if the task description is not empty
 				String addTask = tdl.addTask(taskDesc, details, dateDue, timeDue);
-				System.out.println(tdl.showNotCompleted());
+				//System.out.println(tdl.showNotCompleted());
 				out.println(addTask);	// Send JSON string of task to client so row can be added to datatable
 			}
 			else if (validDate == false) {	// If the date is invalid, send error message / alert back to client to enter a valid date
@@ -85,11 +84,10 @@ public class DataTableServlet extends HttpServlet {
 		}
 		else if (request.getParameter("type").equals("btnSubmitEditTask")) {	// Submission of edit task
 			String strId = request.getParameter("rowId");
-			System.out.println("ID: " + strId);
+			//System.out.println("ID: " + strId);
 			Integer id = Integer.parseInt(strId);
 			String taskDesc = request.getParameter("txbEditTaskDes").trim();		// Get parameters from textboxes and dropdown lists
 			String details = request.getParameter("txtAreaEditDetails").trim();
-			System.out.println("@@@@DETAILS: " + details);
 			String hour = request.getParameter("ddlEditHour");
 			String minute = request.getParameter("ddlEditMinute");
 			String amPm = request.getParameter("ddlEditAmPm");
@@ -104,7 +102,7 @@ public class DataTableServlet extends HttpServlet {
 					if (t != null) {
 						overdue = t.isOverdue;
 					}
-					System.out.println(tdl.showNotCompleted());
+					//System.out.println(tdl.showNotCompleted());
 					out.println("{\n" + 
 							"	\"successEdit\": \"true\"," + 
 							"	\"overdue\": \"" + overdue + "\"" +
